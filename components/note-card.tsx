@@ -61,8 +61,22 @@ export function NoteCard({ note }: NoteCardProps) {
             autoFocus
           />
         ) : (
-          <div className="prose dark:prose-invert prose-sm max-w-none">
-            <ReactMarkdown>{note.content}</ReactMarkdown>
+          <div className="prose dark:prose-invert prose-sm max-w-none break-words">
+            <ReactMarkdown
+              components={{
+                // Override h1, h2, h3 to ensure proper styling
+                h1: ({ node, ...props }) => <h1 className="text-xl font-bold mt-0" {...props} />,
+                h2: ({ node, ...props }) => <h2 className="text-lg font-bold mt-2" {...props} />,
+                h3: ({ node, ...props }) => <h3 className="text-md font-bold mt-2" {...props} />,
+                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2" {...props} />,
+                ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2" {...props} />,
+                p: ({ node, ...props }) => <p className="mt-2" {...props} />,
+                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 pl-4 italic" {...props} />,
+                code: ({ node, ...props }) => <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />,
+              }}
+            >
+              {note.content}
+            </ReactMarkdown>
           </div>
         )}
 
