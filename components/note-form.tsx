@@ -5,10 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useNotesStore } from "@/lib/store"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { PlusCircle, X } from "lucide-react"
+import { PlusCircle, Tag, X } from "lucide-react"
 import { useAuth } from "./auth/auth-context"
 import { MarkdownHelp } from "./markdown-help"
 import { NotePreview } from "./note-preview"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 
 const COLORS = [
   "bg-white dark:bg-zinc-800",
@@ -25,22 +28,61 @@ export function NoteForm() {
   const [isExpanded, setIsExpanded] = useState(false)
   const [content, setContent] = useState("")
   const [selectedColor, setSelectedColor] = useState(COLORS[0])
-  const { addNote } = useNotesStore()
+  const [isTagDialogOpen, setIsTagDialogOpen] = useState(false)
+  const [newTagName, setNewTagName] = useState("")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const { addNote, tags, addTag } = useNotesStore()
   const { user } = useAuth()
 
   const handleSubmit = async () => {
     if (content.trim() && user) {
-      await addNote({
+      const note = await addNote({
         user_id: user.id,
         content,
         color: selectedColor,
         is_pinned: false,
         is_archived: false,
       })
+
+      // Add selected tags to the note
+      if (note && selectedTags.length > 0) {
+        for (const tagId of selectedTags) {
+          await addTagToNote(note.id, tagId)
+        }
+      }
+
       setContent("")
       setSelectedColor(COLORS[0])
+      setSelectedTags([])
       setIsExpanded(false)
     }
+  }
+
+  const handleAddTag = async () => {
+    if (newTagName.trim() && user) {
+      const tagId = await addTag(newTagName.trim(), user.id)
+      if (tagId) {
+        setSelectedTags([...selectedTags, tagId])
+        setNewTagName("")
+      }
+    }
+  }
+
+  const toggleTagSelection = (tagId: string) => {
+    if (selectedTags.includes(tagId)) {
+      setSelectedTags(selectedTags.filter((id) => id !== tagId))
+    } else {
+      setSelectedTags([...selectedTags, tagId])
+    }
+  }
+
+  const removeTag = (tagId: string) => {
+    setSelectedTags(selectedTags.filter((id) => id !== tagId))
+  }
+
+  // This is a mock function since we don't have the actual note ID yet
+  const addTagToNote = async (noteId: string, tagId: string) => {
+    // This will be handled by the store after the note is created
   }
 
   return (
@@ -61,20 +103,25 @@ export function NoteForm() {
             {isExpanded && (
               <div className="text-xs text-muted-foreground mt-1 flex items-center">
                 <span>Markdown is supported.</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 ml-1 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    return false
-                  }}
-                >
-                  <MarkdownHelp />
-                </Button>
               </div>
             )}
             <NotePreview content={content} />
+
+            {selectedTags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-4">
+                {selectedTags.map((tagId) => {
+                  const tag = tags.find((t) => t.id === tagId)
+                  return tag ? (
+                    <Badge key={tag.id} variant="secondary" className="flex items-center gap-1">
+                      {tag.name}
+                      <button onClick={() => removeTag(tag.id)} className="h-3 w-3 rounded-full">
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ) : null
+                })}
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex items-center cursor-text p-2" onClick={() => setIsExpanded(true)}>
@@ -97,12 +144,16 @@ export function NoteForm() {
             ))}
           </div>
           <div className="flex space-x-2">
+            <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)} title="Manage tags">
+              <Tag className="h-4 w-4" />
+            </Button>
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={() => {
                 setIsExpanded(false)
                 setContent("")
+                setSelectedTags([])
               }}
             >
               <X className="h-4 w-4" />
@@ -113,6 +164,48 @@ export function NoteForm() {
           </div>
         </CardFooter>
       )}
+
+      <Dialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Manage Tags</DialogTitle>
+          </DialogHeader>
+          <div className="flex items-center space-x-2">
+            <Input
+              placeholder="Add new tag"
+              value={newTagName}
+              onChange={(e) => setNewTagName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleAddTag()
+                }
+              }}
+            />
+            <Button onClick={handleAddTag}>Add</Button>
+          </div>
+          <div className="mt-4">
+            <h4 className="mb-2 text-sm font-medium">Available Tags</h4>
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag) => {
+                const isSelected = selectedTags.includes(tag.id)
+                return (
+                  <Badge
+                    key={tag.id}
+                    variant={isSelected ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => toggleTagSelection(tag.id)}
+                  >
+                    {tag.name}
+                  </Badge>
+                )
+              })}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsTagDialogOpen(false)}>Done</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }

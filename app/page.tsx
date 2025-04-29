@@ -7,9 +7,8 @@ import { SearchFilter } from "@/components/search-filter"
 import { useAuth } from "@/components/auth/auth-context"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { HelpCircle, LogOut, User } from "lucide-react"
+import { LogOut, User } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { MarkdownHelp } from "@/components/markdown-help"
 
 export default function Home() {
   const { user, signOut, isLoading } = useAuth()
@@ -55,13 +54,6 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <User className="h-4 w-4" />
             <span className="text-sm">{user.email}</span>
-          </div>
-          <div className="relative group">
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
-              <HelpCircle className="h-4 w-4" />
-              <span className="hidden sm:inline">Markdown Guide</span>
-            </Button>
-            <MarkdownHelp />
           </div>
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={handleSignOut}>
