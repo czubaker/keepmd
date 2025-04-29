@@ -69,6 +69,21 @@ export function MarkdownHelp() {
               2. Item 2
             </div>
 
+            <div className="font-mono">
+              - [x] Task list item (completed)
+              <br />- [ ] Task list item (incomplete)
+            </div>
+            <div>
+              <div className="flex items-center">
+                <input type="checkbox" checked readOnly className="mr-2" />
+                <span>Task list item (completed)</span>
+              </div>
+              <div className="flex items-center">
+                <input type="checkbox" readOnly className="mr-2" />
+                <span>Task list item (incomplete)</span>
+              </div>
+            </div>
+
             <div className="font-bold text-lg col-span-2 mt-2">Other Elements</div>
 
             <div className="font-mono">[Link](url)</div>
@@ -118,6 +133,41 @@ export function MarkdownHelp() {
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <div className="font-bold text-lg col-span-2 mt-2">Extended Syntax</div>
+
+            <div className="font-mono">:joy:</div>
+            <div>😂 (Emoji)</div>
+
+            <div className="font-mono">==Highlighted text==</div>
+            <div>
+              <mark className="bg-yellow-200 dark:bg-yellow-800">Highlighted text</mark>
+            </div>
+
+            <div className="font-mono">H~2~O</div>
+            <div>
+              H<sub>2</sub>O (Subscript)
+            </div>
+
+            <div className="font-mono">X^2^</div>
+            <div>
+              X<sup>2</sup> (Superscript)
+            </div>
+
+            <div className="font-mono">
+              Here's a footnote[^1]
+              <br />
+              <br />
+              [^1]: This is the footnote.
+            </div>
+            <div>
+              Here's a footnote<sup>1</sup>
+              <br />
+              <br />
+              <small>
+                <sup>1</sup> This is the footnote.
+              </small>
             </div>
           </div>
         </div>

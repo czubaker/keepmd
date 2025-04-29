@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useNotesStore } from "@/lib/store"
-import { Archive, ArchiveRestore, Edit, Pin, PinOff, Tag, Trash2, X } from "lucide-react"
+import { Archive, ArchiveRestore, Pin, PinOff, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ReactMarkdown from "react-markdown"
 import { format } from "date-fns"
@@ -13,6 +13,10 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from "./auth/auth-context"
+import remarkGfm from "remark-gfm"
+import remarkEmoji from "remark-emoji"
+import remarkSupersub from "remark-supersub"
+import remarkHighlight from "remark-highlight.js"
 
 interface NoteCardProps {
   note: Note
@@ -25,12 +29,15 @@ export function NoteCard({ note }: NoteCardProps) {
   const [editContent, setEditContent] = useState(note.content)
   const [isTagDialogOpen, setIsTagDialogOpen] = useState(false)
   const [newTagName, setNewTagName] = useState("")
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [selectedColor, setSelectedColor] = useState(note.color)
   const { user } = useAuth()
 
   const handleSaveEdit = async () => {
     if (editContent.trim()) {
-      await updateNote(note.id, { content: editContent })
+      await updateNote(note.id, { content: editContent, color: selectedColor })
       setIsEditing(false)
+      setIsExpanded(false)
     }
   }
 
@@ -50,21 +57,42 @@ export function NoteCard({ note }: NoteCardProps) {
 
   const noteTags = note.tags || []
 
+  const COLORS = [
+    "bg-white dark:bg-zinc-800",
+    "bg-red-100 dark:bg-red-900",
+    "bg-orange-100 dark:bg-orange-900",
+    "bg-yellow-100 dark:bg-yellow-900",
+    "bg-green-100 dark:bg-green-900",
+    "bg-blue-100 dark:bg-blue-900",
+    "bg-purple-100 dark:bg-purple-900",
+    "bg-pink-100 dark:bg-pink-900",
+  ]
+
+  const handleNoteClick = () => {
+    if (!isEditing) {
+      setIsExpanded(true)
+    }
+  }
+
+  const handleCloseExpanded = () => {
+    if (isEditing) {
+      handleSaveEdit()
+    } else {
+      setIsExpanded(false)
+    }
+  }
+
   return (
-    <Card className={`${note.color} border transition-colors duration-200 h-full flex flex-col`}>
-      <CardContent className="pt-6 flex-grow overflow-auto">
-        {isEditing ? (
-          <Textarea
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
-            className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-            autoFocus
-          />
-        ) : (
+    <>
+      <Card
+        className={`${note.color} border transition-colors duration-200 h-full flex flex-col cursor-pointer`}
+        onClick={handleNoteClick}
+      >
+        <CardContent className="pt-6 flex-grow overflow-auto">
           <div className="prose dark:prose-invert prose-sm max-w-none break-words">
             <ReactMarkdown
+              remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub, remarkHighlight]}
               components={{
-                // Fix heading sizes with clear hierarchy
                 h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
                 h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
                 h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
@@ -73,17 +101,29 @@ export function NoteCard({ note }: NoteCardProps) {
                 h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
                 ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
                 ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
-                li: ({ node, ...props }) => <li className="mt-1" {...props} />,
+                li: ({ node, className, ...props }) => {
+                  if (className?.includes("task-list-item")) {
+                    return (
+                      <li className="flex items-start mt-1">
+                        <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
+                        <span>{props.children}</span>
+                      </li>
+                    )
+                  }
+                  return <li className="mt-1" {...props} />
+                },
                 p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
                 blockquote: ({ node, ...props }) => <blockquote className="border-l-4 pl-4 italic my-2" {...props} />,
-                code: ({ node, inline, ...props }) =>
-                  inline ? (
-                    <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
-                  ) : (
-                    <pre className="bg-muted p-2 rounded overflow-x-auto my-2">
-                      <code {...props} />
+                code: ({ node, inline, className, ...props }) => {
+                  const match = /language-(\w+)/.exec(className || "")
+                  return !inline ? (
+                    <pre className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}>
+                      <code className={className} {...props} />
                     </pre>
-                  ),
+                  ) : (
+                    <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
+                  )
+                },
                 a: ({ node, ...props }) => (
                   <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
                 ),
@@ -92,69 +132,198 @@ export function NoteCard({ note }: NoteCardProps) {
                 table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
                 th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
                 td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
-                // Additional markdown extensions
                 del: ({ node, ...props }) => <del className="line-through" {...props} />,
                 em: ({ node, ...props }) => <em className="italic" {...props} />,
                 strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                sub: ({ node, ...props }) => <sub {...props} />,
+                sup: ({ node, ...props }) => <sup {...props} />,
+                mark: ({ node, ...props }) => <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />,
               }}
             >
               {note.content}
             </ReactMarkdown>
           </div>
-        )}
 
-        {noteTags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-4">
-            {noteTags.map((tag: TagType) => (
-              <Badge key={tag.id} variant="secondary" className="flex items-center gap-1">
-                {tag.name}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleRemoveTag(tag.id)
-                  }}
-                  className="h-3 w-3 rounded-full"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
+          {noteTags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-4">
+              {noteTags.map((tag: TagType) => (
+                <Badge key={tag.id} variant="secondary" className="flex items-center gap-1">
+                  {tag.name}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleRemoveTag(tag.id)
+                    }}
+                    className="h-3 w-3 rounded-full"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          )}
+        </CardContent>
+        <CardFooter className="flex justify-between items-center border-t">
+          <span className="text-xs text-muted-foreground">{format(new Date(note.created_at), "MMM d, yyyy")}</span>
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                togglePinned(note.id)
+              }}
+            >
+              {note.is_pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation()
+                toggleArchived(note.id)
+              }}
+            >
+              {note.is_archived ? <ArchiveRestore className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
+            </Button>
           </div>
-        )}
-      </CardContent>
-      <CardFooter className="flex justify-between items-center border-t">
-        <span className="text-xs text-muted-foreground">{format(new Date(note.created_at), "MMM d, yyyy")}</span>
-        <div className="flex items-center space-x-1">
+        </CardFooter>
+      </Card>
+
+      <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
+        <DialogContent className={`${selectedColor} max-w-3xl w-full`}>
+          <DialogHeader>
+            <DialogTitle className="flex justify-between items-center">
+              <span>Note</span>
+              <Button variant="outline" size="sm" onClick={() => setIsEditing(!isEditing)}>
+                {isEditing ? "Cancel Edit" : "Edit Note"}
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+
           {isEditing ? (
             <>
-              <Button variant="ghost" size="icon" onClick={() => setIsEditing(false)}>
-                <X className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={handleSaveEdit}>
-                <Edit className="h-4 w-4" />
-              </Button>
+              <Textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="min-h-[200px] resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                autoFocus
+              />
+
+              <div className="flex flex-wrap gap-2 mt-4">
+                <div className="text-sm font-medium mb-1 w-full">Note Color:</div>
+                {COLORS.map((color) => (
+                  <button
+                    key={color}
+                    className={`h-8 w-8 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                    onClick={() => setSelectedColor(color)}
+                    aria-label={`Select ${color} color`}
+                  />
+                ))}
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveEdit}>Save Changes</Button>
+              </DialogFooter>
             </>
           ) : (
-            <>
-              <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)}>
-                <Tag className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => togglePinned(note.id)}>
-                {note.is_pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => toggleArchived(note.id)}>
-                {note.is_archived ? <ArchiveRestore className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
-                <Edit className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => deleteNote(note.id)}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </>
+            <div className="prose dark:prose-invert max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub, remarkHighlight]}
+                components={{
+                  h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
+                  h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
+                  h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
+                  h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
+                  h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
+                  h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
+                  ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
+                  ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
+                  li: ({ node, className, ...props }) => {
+                    if (className?.includes("task-list-item")) {
+                      return (
+                        <li className="flex items-start mt-1">
+                          <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
+                          <span>{props.children}</span>
+                        </li>
+                      )
+                    }
+                    return <li className="mt-1" {...props} />
+                  },
+                  p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
+                  blockquote: ({ node, ...props }) => <blockquote className="border-l-4 pl-4 italic my-2" {...props} />,
+                  code: ({ node, inline, className, ...props }) => {
+                    const match = /language-(\w+)/.exec(className || "")
+                    return !inline ? (
+                      <pre
+                        className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}
+                      >
+                        <code className={className} {...props} />
+                      </pre>
+                    ) : (
+                      <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
+                    )
+                  },
+                  a: ({ node, ...props }) => (
+                    <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
+                  ),
+                  img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
+                  hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
+                  table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
+                  th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
+                  td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
+                  del: ({ node, ...props }) => <del className="line-through" {...props} />,
+                  em: ({ node, ...props }) => <em className="italic" {...props} />,
+                  strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                  sub: ({ node, ...props }) => <sub {...props} />,
+                  sup: ({ node, ...props }) => <sup {...props} />,
+                  mark: ({ node, ...props }) => <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />,
+                }}
+              >
+                {note.content}
+              </ReactMarkdown>
+
+              {noteTags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-4">
+                  <div className="text-sm font-medium mb-1 w-full">Tags:</div>
+                  {noteTags.map((tag: TagType) => (
+                    <Badge key={tag.id} variant="secondary">
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex justify-between mt-6">
+                <Button variant="outline" size="sm" onClick={() => setIsTagDialogOpen(true)}>
+                  Manage Tags
+                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => togglePinned(note.id)}>
+                    {note.is_pinned ? "Unpin" : "Pin"}
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => toggleArchived(note.id)}>
+                    {note.is_archived ? "Unarchive" : "Archive"}
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      deleteNote(note.id)
+                      setIsExpanded(false)
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            </div>
           )}
-        </div>
-      </CardFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
         <DialogContent>
@@ -203,6 +372,6 @@ export function NoteCard({ note }: NoteCardProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </>
   )
 }

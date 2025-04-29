@@ -90,7 +90,7 @@ export function NoteForm() {
             {COLORS.map((color) => (
               <button
                 key={color}
-                className={`h-6 w-6 rounded-full border ${color === selectedColor ? "ring-2 ring-primary" : ""}`}
+                className={`h-8 w-8 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""}`}
                 onClick={() => setSelectedColor(color)}
                 aria-label={`Select ${color} color`}
               />

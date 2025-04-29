@@ -63,7 +63,11 @@
     "@supabase/supabase-js": "latest",
     "@tailwindcss/typography": "latest",
     "zustand": "latest",
-    "react-markdown": "latest"
+    "react-markdown": "latest",
+    "remark-gfm": "latest",
+    "remark-emoji": "latest",
+    "remark-supersub": "latest",
+    "remark-highlight.js": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
