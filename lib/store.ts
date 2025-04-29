@@ -63,9 +63,24 @@ export const useNotesStore = create<NotesState>((set, get) => ({
           table: "notes",
           filter: `user_id=eq.${userId}`,
         },
-        () => {
-          // Refetch notes when changes occur
-          get().fetchNotes(userId)
+        (payload) => {
+          // Handle different events
+          if (payload.eventType === "INSERT") {
+            const newNote = payload.new as Note
+            set((state) => ({
+              notes: [{ ...newNote, tags: [] }, ...state.notes],
+            }))
+          } else if (payload.eventType === "UPDATE") {
+            const updatedNote = payload.new as Note
+            set((state) => ({
+              notes: state.notes.map((note) => (note.id === updatedNote.id ? { ...note, ...updatedNote } : note)),
+            }))
+          } else if (payload.eventType === "DELETE") {
+            const deletedNote = payload.old as Note
+            set((state) => ({
+              notes: state.notes.filter((note) => note.id !== deletedNote.id),
+            }))
+          }
         },
       )
       .on(

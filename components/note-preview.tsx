@@ -1,0 +1,59 @@
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Eye, EyeOff } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+
+interface NotePreviewProps {
+  content: string
+}
+
+export function NotePreview({ content }: NotePreviewProps) {
+  const [showPreview, setShowPreview] = useState(false)
+
+  if (!content.trim()) {
+    return null
+  }
+
+  return (
+    <div className="mt-2">
+      <div className="flex justify-end mb-1">
+        <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={() => setShowPreview(!showPreview)}>
+          {showPreview ? (
+            <>
+              <EyeOff className="h-3 w-3 mr-1" /> Hide Preview
+            </>
+          ) : (
+            <>
+              <Eye className="h-3 w-3 mr-1" /> Preview
+            </>
+          )}
+        </Button>
+      </div>
+
+      {showPreview && (
+        <div className="border rounded-md p-3 bg-background/50">
+          <div className="prose dark:prose-invert prose-sm max-w-none">
+            <ReactMarkdown
+              components={{
+                h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mt-0 mb-2" {...props} />,
+                h2: ({ node, ...props }) => <h2 className="text-xl font-bold mt-3 mb-2" {...props} />,
+                h3: ({ node, ...props }) => <h3 className="text-lg font-bold mt-3 mb-2" {...props} />,
+                h4: ({ node, ...props }) => <h4 className="text-base font-bold mt-3 mb-1" {...props} />,
+                h5: ({ node, ...props }) => <h5 className="text-sm font-bold mt-3 mb-1" {...props} />,
+                h6: ({ node, ...props }) => <h6 className="text-xs font-bold mt-3 mb-1" {...props} />,
+                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
+                ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
+                li: ({ node, ...props }) => <li className="mt-1" {...props} />,
+                p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
+              }}
+            >
+              {content}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

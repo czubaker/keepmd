@@ -7,6 +7,8 @@ import { useNotesStore } from "@/lib/store"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { PlusCircle, X } from "lucide-react"
 import { useAuth } from "./auth/auth-context"
+import { MarkdownHelp } from "./markdown-help"
+import { NotePreview } from "./note-preview"
 
 const COLORS = [
   "bg-white dark:bg-zinc-800",
@@ -45,13 +47,19 @@ export function NoteForm() {
     <Card className={`mb-8 ${selectedColor} border transition-colors duration-200`}>
       <CardContent className="pt-6">
         {isExpanded ? (
-          <Textarea
-            placeholder="Take a note... (Markdown supported)"
-            className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            autoFocus
-          />
+          <div className="relative">
+            <Textarea
+              placeholder="Take a note... (Markdown supported)"
+              className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-8"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              autoFocus
+            />
+            <div className="absolute top-0 right-0">
+              <MarkdownHelp />
+            </div>
+            <NotePreview content={content} />
+          </div>
         ) : (
           <div className="flex items-center cursor-text p-2" onClick={() => setIsExpanded(true)}>
             <PlusCircle className="mr-2 h-5 w-5 text-muted-foreground" />

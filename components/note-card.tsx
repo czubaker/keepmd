@@ -64,15 +64,34 @@ export function NoteCard({ note }: NoteCardProps) {
           <div className="prose dark:prose-invert prose-sm max-w-none break-words">
             <ReactMarkdown
               components={{
-                // Override h1, h2, h3 to ensure proper styling
-                h1: ({ node, ...props }) => <h1 className="text-xl font-bold mt-0" {...props} />,
-                h2: ({ node, ...props }) => <h2 className="text-lg font-bold mt-2" {...props} />,
-                h3: ({ node, ...props }) => <h3 className="text-md font-bold mt-2" {...props} />,
-                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2" {...props} />,
-                ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2" {...props} />,
-                p: ({ node, ...props }) => <p className="mt-2" {...props} />,
-                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 pl-4 italic" {...props} />,
-                code: ({ node, ...props }) => <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />,
+                // Fix heading sizes with clear hierarchy
+                h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mt-0 mb-2" {...props} />,
+                h2: ({ node, ...props }) => <h2 className="text-xl font-bold mt-3 mb-2" {...props} />,
+                h3: ({ node, ...props }) => <h3 className="text-lg font-bold mt-3 mb-2" {...props} />,
+                h4: ({ node, ...props }) => <h4 className="text-base font-bold mt-3 mb-1" {...props} />,
+                h5: ({ node, ...props }) => <h5 className="text-sm font-bold mt-3 mb-1" {...props} />,
+                h6: ({ node, ...props }) => <h6 className="text-xs font-bold mt-3 mb-1" {...props} />,
+                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
+                ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
+                li: ({ node, ...props }) => <li className="mt-1" {...props} />,
+                p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
+                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 pl-4 italic my-2" {...props} />,
+                code: ({ node, inline, ...props }) =>
+                  inline ? (
+                    <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
+                  ) : (
+                    <pre className="bg-muted p-2 rounded overflow-x-auto my-2">
+                      <code {...props} />
+                    </pre>
+                  ),
+                a: ({ node, ...props }) => (
+                  <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
+                ),
+                img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
+                hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
+                table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
+                th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
+                td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
               }}
             >
               {note.content}

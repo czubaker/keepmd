@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import { useRouter } from "next/navigation"
 
 export function SignupForm() {
   const [email, setEmail] = useState("")
@@ -16,6 +17,7 @@ export function SignupForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { signUp } = useAuth()
   const { toast } = useToast()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,8 +27,9 @@ export function SignupForm() {
       await signUp(email, password)
       toast({
         title: "Success",
-        description: "Check your email for the confirmation link",
+        description: "Account created successfully. You can now log in.",
       })
+      router.push("/login")
     } catch (error) {
       toast({
         title: "Error",
