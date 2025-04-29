@@ -197,9 +197,6 @@ export function NoteCard({ note }: NoteCardProps) {
                   <MarkdownHelp />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon" onClick={() => setIsEditing(false)}>
-                    <X className="h-4 w-4" />
-                  </Button>
                   <Button variant="ghost" size="icon" onClick={handleSaveEdit}>
                     <Save className="h-4 w-4" />
                   </Button>
@@ -301,12 +298,6 @@ export function NoteCard({ note }: NoteCardProps) {
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex justify-end">
-                <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </div>
-
               <div className="prose dark:prose-invert max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
@@ -376,27 +367,47 @@ export function NoteCard({ note }: NoteCardProps) {
                 )}
               </div>
 
-              <div className="flex justify-between pt-2">
-                <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)}>
-                  <Tag className="h-4 w-4" />
-                </Button>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon" onClick={() => togglePinned(note.id)}>
-                    {note.is_pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+              <div className="flex flex-col gap-4 pt-2">
+                <div className="flex flex-wrap gap-2">
+                  <div className="text-sm font-medium mb-1 w-full">Note Color:</div>
+                  {COLORS.map((color) => (
+                    <button
+                      key={color}
+                      className={`h-8 w-8 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                      onClick={() => {
+                        setSelectedColor(color)
+                        updateNote(note.id, { color })
+                      }}
+                      aria-label={`Select ${color} color`}
+                    />
+                  ))}
+                </div>
+
+                <div className="flex justify-between">
+                  <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)}>
+                    <Tag className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => toggleArchived(note.id)}>
-                    {note.is_archived ? <ArchiveRestore className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      deleteNote(note.id)
-                      setIsExpanded(false)
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="icon" onClick={() => togglePinned(note.id)}>
+                      {note.is_pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => toggleArchived(note.id)}>
+                      {note.is_archived ? <ArchiveRestore className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        deleteNote(note.id)
+                        setIsExpanded(false)
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
