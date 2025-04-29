@@ -62,8 +62,8 @@
     "use-sync-external-store": "latest",
     "@supabase/supabase-js": "latest",
     "@tailwindcss/typography": "latest",
-    "react-markdown": "latest",
-    "zustand": "latest"
+    "zustand": "latest",
+    "react-markdown": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

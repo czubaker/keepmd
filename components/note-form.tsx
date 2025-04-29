@@ -55,9 +55,25 @@ export function NoteForm() {
               onChange={(e) => setContent(e.target.value)}
               autoFocus
             />
-            <div className="absolute top-0 right-0">
+            <div className="absolute top-2 right-2">
               <MarkdownHelp />
             </div>
+            {isExpanded && (
+              <div className="text-xs text-muted-foreground mt-1 flex items-center">
+                <span>Markdown is supported.</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 ml-1 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    return false
+                  }}
+                >
+                  <MarkdownHelp />
+                </Button>
+              </div>
+            )}
             <NotePreview content={content} />
           </div>
         ) : (
