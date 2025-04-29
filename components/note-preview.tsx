@@ -7,7 +7,6 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkEmoji from "remark-emoji"
 import remarkSupersub from "remark-supersub"
-import remarkHighlight from "remark-highlight.js"
 
 interface NotePreviewProps {
   content: string
@@ -40,7 +39,7 @@ export function NotePreview({ content }: NotePreviewProps) {
         <div className="border rounded-md p-3 bg-background/50">
           <div className="prose dark:prose-invert prose-sm max-w-none">
             <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub, remarkHighlight]}
+              remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
               components={{
                 h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
                 h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,

@@ -66,8 +66,7 @@
     "react-markdown": "latest",
     "remark-gfm": "latest",
     "remark-emoji": "latest",
-    "remark-supersub": "latest",
-    "remark-highlight.js": "latest"
+    "remark-supersub": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
