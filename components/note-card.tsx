@@ -241,7 +241,7 @@ export function NoteCard({ note }: NoteCardProps) {
         <DialogContent className={`${selectedColor} max-w-3xl w-full max-h-[90vh] flex flex-col`}>
           {isEditing ? (
             <div className="flex flex-col h-full">
-              <div className="flex-grow overflow-auto">
+              <div className="flex-grow overflow-auto pb-16">
                 <div className={`flex ${showPreview ? "space-x-4" : ""}`}>
                   <div className={`${showPreview ? "w-1/2" : "w-full"}`}>
                     <Textarea
@@ -338,7 +338,7 @@ export function NoteCard({ note }: NoteCardProps) {
             </div>
           ) : (
             <div className="flex flex-col h-full">
-              <div className="flex-grow overflow-auto">
+              <div className="flex-grow overflow-auto pb-16">
                 <div className="prose dark:prose-invert max-w-none">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
