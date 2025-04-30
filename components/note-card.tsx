@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+
+import { useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useNotesStore } from "@/lib/store"
-import { Archive, ArchiveRestore, Edit, Eye, EyeOff, Pin, PinOff, Save, Tag, Trash2, X } from "lucide-react"
+import { Archive, ArchiveRestore, Edit, Eye, EyeOff, Pin, PinOff, Tag, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ReactMarkdown from "react-markdown"
 import { format } from "date-fns"
@@ -32,14 +34,47 @@ export function NoteCard({ note }: NoteCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [selectedColor, setSelectedColor] = useState(note.color)
   const [showPreview, setShowPreview] = useState(false)
+  const [hasChanges, setHasChanges] = useState(false)
   const { user } = useAuth()
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // Reset state when note changes
+  useEffect(() => {
+    setEditContent(note.content)
+    setSelectedColor(note.color)
+    setHasChanges(false)
+  }, [note])
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [editContent, isEditing])
 
   const handleSaveEdit = async () => {
     if (editContent.trim()) {
       await updateNote(note.id, { content: editContent, color: selectedColor })
-      setIsEditing(false)
-      setShowPreview(false)
+      setHasChanges(false)
     }
+  }
+
+  const handleCloseEditing = () => {
+    setIsEditing(false)
+    setShowPreview(false)
+    if (hasChanges) {
+      handleSaveEdit()
+    }
+  }
+
+  const handleDiscardChanges = () => {
+    setEditContent(note.content)
+    setSelectedColor(note.color)
+    setIsEditing(false)
+    setShowPreview(false)
+    setHasChanges(false)
   }
 
   const handleAddTag = async () => {
@@ -77,13 +112,18 @@ export function NoteCard({ note }: NoteCardProps) {
     }
   }
 
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditContent(e.target.value)
+    setHasChanges(e.target.value !== note.content)
+  }
+
   return (
     <>
       <Card
-        className={`${note.color} border transition-colors duration-200 h-full flex flex-col cursor-pointer`}
+        className={`${note.color} border transition-colors duration-200 flex flex-col cursor-pointer`}
         onClick={handleNoteClick}
       >
-        <CardContent className="pt-6 flex-grow overflow-auto">
+        <CardContent className="pt-6 flex-grow overflow-hidden max-h-[300px]">
           <div className="prose dark:prose-invert prose-sm max-w-none break-words">
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
@@ -185,11 +225,104 @@ export function NoteCard({ note }: NoteCardProps) {
         </CardFooter>
       </Card>
 
-      <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
-        <DialogContent className={`${selectedColor} max-w-3xl w-full`}>
+      <Dialog
+        open={isExpanded}
+        onOpenChange={(open) => {
+          if (!open && isEditing && hasChanges) {
+            handleSaveEdit()
+          }
+          setIsExpanded(open)
+          if (!open) {
+            setIsEditing(false)
+            setShowPreview(false)
+          }
+        }}
+      >
+        <DialogContent className={`${selectedColor} max-w-3xl w-full max-h-[90vh] flex flex-col`}>
           {isEditing ? (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
+            <div className="flex flex-col h-full">
+              <div className="flex-grow overflow-auto">
+                <div className={`flex ${showPreview ? "space-x-4" : ""}`}>
+                  <div className={`${showPreview ? "w-1/2" : "w-full"}`}>
+                    <Textarea
+                      ref={textareaRef}
+                      value={editContent}
+                      onChange={handleContentChange}
+                      className="min-h-[200px] h-auto resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
+                      autoFocus
+                    />
+                  </div>
+
+                  {showPreview && (
+                    <div className="w-1/2 border rounded-md p-3 bg-background/50 overflow-auto">
+                      <div className="prose dark:prose-invert prose-sm max-w-none">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
+                          components={{
+                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
+                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
+                            h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
+                            h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
+                            h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
+                            h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
+                            ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
+                            ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
+                            li: ({ node, className, ...props }) => {
+                              if (className?.includes("task-list-item")) {
+                                return (
+                                  <li className="flex items-start mt-1">
+                                    <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
+                                    <span>{props.children}</span>
+                                  </li>
+                                )
+                              }
+                              return <li className="mt-1" {...props} />
+                            },
+                            p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
+                            blockquote: ({ node, ...props }) => (
+                              <blockquote className="border-l-4 pl-4 italic my-2" {...props} />
+                            ),
+                            code: ({ node, inline, className, ...props }) => {
+                              const match = /language-(\w+)/.exec(className || "")
+                              return !inline ? (
+                                <pre
+                                  className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}
+                                >
+                                  <code className={className} {...props} />
+                                </pre>
+                              ) : (
+                                <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
+                              )
+                            },
+                            a: ({ node, ...props }) => (
+                              <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
+                            ),
+                            img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
+                            hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
+                            table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
+                            th: ({ node, ...props }) => (
+                              <th className="border border-muted p-2 bg-muted/50" {...props} />
+                            ),
+                            td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
+                            del: ({ node, ...props }) => <del className="line-through" {...props} />,
+                            em: ({ node, ...props }) => <em className="italic" {...props} />,
+                            strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                            sub: ({ node, ...props }) => <sub {...props} />,
+                            sup: ({ node, ...props }) => <sup {...props} />,
+                            mark: ({ node, ...props }) => (
+                              <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />
+                            ),
+                          }}
+                        >
+                          {editContent}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center pt-4 mt-4 border-t sticky bottom-0 bg-inherit">
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="icon" onClick={() => setShowPreview(!showPreview)}>
                     {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -197,179 +330,87 @@ export function NoteCard({ note }: NoteCardProps) {
                   <MarkdownHelp />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon" onClick={handleSaveEdit}>
-                    <Save className="h-4 w-4" />
+                  <Button variant="outline" size="sm" onClick={handleDiscardChanges}>
+                    Close without saving
                   </Button>
                 </div>
               </div>
-
-              {!showPreview ? (
-                <div className="relative">
-                  <Textarea
-                    value={editContent}
-                    onChange={(e) => setEditContent(e.target.value)}
-                    className="min-h-[200px] resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                    autoFocus
-                  />
-                  <div className="text-xs text-muted-foreground mt-1">
-                    <span>Markdown is supported</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="border rounded-md p-3 bg-background/50 min-h-[200px]">
-                  <div className="prose dark:prose-invert prose-sm max-w-none">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
-                      components={{
-                        h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
-                        h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
-                        h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
-                        h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
-                        h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
-                        h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
-                        ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
-                        ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
-                        li: ({ node, className, ...props }) => {
-                          if (className?.includes("task-list-item")) {
-                            return (
-                              <li className="flex items-start mt-1">
-                                <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
-                                <span>{props.children}</span>
-                              </li>
-                            )
-                          }
-                          return <li className="mt-1" {...props} />
-                        },
-                        p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
-                        blockquote: ({ node, ...props }) => (
-                          <blockquote className="border-l-4 pl-4 italic my-2" {...props} />
-                        ),
-                        code: ({ node, inline, className, ...props }) => {
-                          const match = /language-(\w+)/.exec(className || "")
-                          return !inline ? (
-                            <pre
-                              className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}
-                            >
-                              <code className={className} {...props} />
-                            </pre>
-                          ) : (
-                            <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
-                          )
-                        },
-                        a: ({ node, ...props }) => (
-                          <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
-                        ),
-                        img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
-                        hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
-                        table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
-                        th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
-                        td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
-                        del: ({ node, ...props }) => <del className="line-through" {...props} />,
-                        em: ({ node, ...props }) => <em className="italic" {...props} />,
-                        strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-                        sub: ({ node, ...props }) => <sub {...props} />,
-                        sup: ({ node, ...props }) => <sup {...props} />,
-                        mark: ({ node, ...props }) => <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />,
-                      }}
-                    >
-                      {editContent}
-                    </ReactMarkdown>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex justify-between items-center pt-2">
-                <div className="flex flex-wrap gap-2">
-                  {COLORS.map((color) => (
-                    <button
-                      key={color}
-                      className={`h-8 w-8 rounded-full ${color} border ${
-                        color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""
-                      }`}
-                      onClick={() => setSelectedColor(color)}
-                      aria-label={`Select ${color} color`}
-                    />
-                  ))}
-                </div>
-                <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)}>
-                  <Tag className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="prose dark:prose-invert max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
-                  components={{
-                    h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
-                    h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
-                    h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
-                    h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
-                    h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
-                    h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
-                    ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
-                    ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
-                    li: ({ node, className, ...props }) => {
-                      if (className?.includes("task-list-item")) {
-                        return (
-                          <li className="flex items-start mt-1">
-                            <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
-                            <span>{props.children}</span>
-                          </li>
+            <div className="flex flex-col h-full">
+              <div className="flex-grow overflow-auto">
+                <div className="prose dark:prose-invert max-w-none">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
+                    components={{
+                      h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
+                      h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
+                      h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
+                      h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
+                      h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
+                      h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
+                      ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
+                      ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
+                      li: ({ node, className, ...props }) => {
+                        if (className?.includes("task-list-item")) {
+                          return (
+                            <li className="flex items-start mt-1">
+                              <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
+                              <span>{props.children}</span>
+                            </li>
+                          )
+                        }
+                        return <li className="mt-1" {...props} />
+                      },
+                      p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
+                      blockquote: ({ node, ...props }) => (
+                        <blockquote className="border-l-4 pl-4 italic my-2" {...props} />
+                      ),
+                      code: ({ node, inline, className, ...props }) => {
+                        const match = /language-(\w+)/.exec(className || "")
+                        return !inline ? (
+                          <pre
+                            className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}
+                          >
+                            <code className={className} {...props} />
+                          </pre>
+                        ) : (
+                          <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
                         )
-                      }
-                      return <li className="mt-1" {...props} />
-                    },
-                    p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
-                    blockquote: ({ node, ...props }) => (
-                      <blockquote className="border-l-4 pl-4 italic my-2" {...props} />
-                    ),
-                    code: ({ node, inline, className, ...props }) => {
-                      const match = /language-(\w+)/.exec(className || "")
-                      return !inline ? (
-                        <pre
-                          className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}
-                        >
-                          <code className={className} {...props} />
-                        </pre>
-                      ) : (
-                        <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
-                      )
-                    },
-                    a: ({ node, ...props }) => (
-                      <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
-                    ),
-                    img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
-                    hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
-                    table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
-                    th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
-                    td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
-                    del: ({ node, ...props }) => <del className="line-through" {...props} />,
-                    em: ({ node, ...props }) => <em className="italic" {...props} />,
-                    strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-                    sub: ({ node, ...props }) => <sub {...props} />,
-                    sup: ({ node, ...props }) => <sup {...props} />,
-                    mark: ({ node, ...props }) => <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />,
-                  }}
-                >
-                  {note.content}
-                </ReactMarkdown>
+                      },
+                      a: ({ node, ...props }) => (
+                        <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
+                      ),
+                      img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
+                      hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
+                      table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
+                      th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
+                      td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
+                      del: ({ node, ...props }) => <del className="line-through" {...props} />,
+                      em: ({ node, ...props }) => <em className="italic" {...props} />,
+                      strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                      sub: ({ node, ...props }) => <sub {...props} />,
+                      sup: ({ node, ...props }) => <sup {...props} />,
+                      mark: ({ node, ...props }) => <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />,
+                    }}
+                  >
+                    {note.content}
+                  </ReactMarkdown>
 
-                {noteTags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-4">
-                    {noteTags.map((tag: TagType) => (
-                      <Badge key={tag.id} variant="secondary">
-                        {tag.name}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
+                  {noteTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-4">
+                      {noteTags.map((tag: TagType) => (
+                        <Badge key={tag.id} variant="secondary">
+                          {tag.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="flex flex-col gap-4 pt-2">
-                <div className="flex flex-wrap gap-2">
-                  <div className="text-sm font-medium mb-1 w-full">Note Color:</div>
+              <div className="flex justify-between items-center pt-4 mt-4 border-t sticky bottom-0 bg-inherit">
+                <div className="flex flex-wrap gap-2 items-center">
                   {COLORS.map((color) => (
                     <button
                       key={color}
@@ -381,33 +422,30 @@ export function NoteCard({ note }: NoteCardProps) {
                       aria-label={`Select ${color} color`}
                     />
                   ))}
-                </div>
-
-                <div className="flex justify-between">
                   <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)}>
                     <Tag className="h-4 w-4" />
                   </Button>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => togglePinned(note.id)}>
-                      {note.is_pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => toggleArchived(note.id)}>
-                      {note.is_archived ? <ArchiveRestore className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        deleteNote(note.id)
-                        setIsExpanded(false)
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon" onClick={() => togglePinned(note.id)}>
+                    {note.is_pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => toggleArchived(note.id)}>
+                    {note.is_archived ? <ArchiveRestore className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      deleteNote(note.id)
+                      setIsExpanded(false)
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </div>

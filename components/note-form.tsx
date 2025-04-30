@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useNotesStore } from "@/lib/store"
@@ -33,6 +35,15 @@ export function NoteForm() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const { addNote, tags, addTag } = useNotesStore()
   const { user } = useAuth()
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current && isExpanded) {
+      textareaRef.current.style.height = "auto"
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [content, isExpanded])
 
   const handleSubmit = async () => {
     if (content.trim() && user) {
@@ -85,16 +96,21 @@ export function NoteForm() {
     // This will be handled by the store after the note is created
   }
 
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value)
+  }
+
   return (
     <Card className={`mb-8 ${selectedColor} border transition-colors duration-200`}>
       <CardContent className="pt-6">
         {isExpanded ? (
           <div className="relative">
             <Textarea
+              ref={textareaRef}
               placeholder="Take a note... (Markdown supported)"
               className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-8"
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={handleContentChange}
               autoFocus
             />
             <div className="absolute top-2 right-2">
