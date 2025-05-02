@@ -5,7 +5,7 @@ import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useNotesStore } from "@/lib/store"
-import { Archive, ArchiveRestore, Edit, Eye, EyeOff, Pin, PinOff, Tag, Trash2, X } from "lucide-react"
+import { Archive, ArchiveRestore, Edit, Eye, EyeOff, Pin, PinOff, Palette, Tag, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ReactMarkdown from "react-markdown"
 import { format } from "date-fns"
@@ -19,6 +19,8 @@ import remarkGfm from "remark-gfm"
 import remarkEmoji from "remark-emoji"
 import remarkSupersub from "remark-supersub"
 import { MarkdownHelp } from "./markdown-help"
+import { useMobile } from "@/hooks/use-mobile"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 interface NoteCardProps {
   note: Note
@@ -35,7 +37,9 @@ export function NoteCard({ note }: NoteCardProps) {
   const [selectedColor, setSelectedColor] = useState(note.color)
   const [showPreview, setShowPreview] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
+  const [isColorMenuOpen, setIsColorMenuOpen] = useState(false)
   const { user } = useAuth()
+  const isMobile = useMobile()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -115,6 +119,52 @@ export function NoteCard({ note }: NoteCardProps) {
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditContent(e.target.value)
     setHasChanges(e.target.value !== note.content)
+  }
+
+  const ColorSelector = () => {
+    if (isMobile) {
+      return (
+        <DropdownMenu open={isColorMenuOpen} onOpenChange={setIsColorMenuOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Palette className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="p-2">
+            <div className="grid grid-cols-4 gap-1">
+              {COLORS.map((color) => (
+                <button
+                  key={color}
+                  className={`h-6 w-6 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-1" : ""}`}
+                  onClick={() => {
+                    setSelectedColor(color)
+                    updateNote(note.id, { color })
+                    setIsColorMenuOpen(false)
+                  }}
+                  aria-label={`Select ${color} color`}
+                />
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+
+    return (
+      <>
+        {COLORS.map((color) => (
+          <button
+            key={color}
+            className={`h-8 w-8 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""}`}
+            onClick={() => {
+              setSelectedColor(color)
+              updateNote(note.id, { color })
+            }}
+            aria-label={`Select ${color} color`}
+          />
+        ))}
+      </>
+    )
   }
 
   return (
@@ -416,17 +466,7 @@ export function NoteCard({ note }: NoteCardProps) {
 
                 <div className="flex justify-between items-center p-4 border-t w-full mt-auto">
                   <div className="flex flex-wrap gap-2 items-center">
-                    {COLORS.map((color) => (
-                      <button
-                        key={color}
-                        className={`h-8 w-8 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""}`}
-                        onClick={() => {
-                          setSelectedColor(color)
-                          updateNote(note.id, { color })
-                        }}
-                        aria-label={`Select ${color} color`}
-                      />
-                    ))}
+                    <ColorSelector />
                     <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)}>
                       <Tag className="h-4 w-4" />
                     </Button>
