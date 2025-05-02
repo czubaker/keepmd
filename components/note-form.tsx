@@ -7,13 +7,15 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useNotesStore } from "@/lib/store"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { PlusCircle, Tag, X } from "lucide-react"
+import { PlusCircle, Tag, X, Palette } from "lucide-react"
 import { useAuth } from "./auth/auth-context"
 import { MarkdownHelp } from "./markdown-help"
 import { NotePreview } from "./note-preview"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { useMobile } from "@/hooks/use-mobile"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 const COLORS = [
   "bg-white dark:bg-zinc-800",
@@ -33,9 +35,11 @@ export function NoteForm() {
   const [isTagDialogOpen, setIsTagDialogOpen] = useState(false)
   const [newTagName, setNewTagName] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [isColorMenuOpen, setIsColorMenuOpen] = useState(false)
   const { addNote, tags, addTag } = useNotesStore()
   const { user } = useAuth()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const isMobile = useMobile()
 
   // Auto-resize textarea
   useEffect(() => {
@@ -100,6 +104,48 @@ export function NoteForm() {
     setContent(e.target.value)
   }
 
+  const ColorSelector = () => {
+    if (isMobile) {
+      return (
+        <DropdownMenu open={isColorMenuOpen} onOpenChange={setIsColorMenuOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Palette className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="p-2">
+            <div className="grid grid-cols-4 gap-1">
+              {COLORS.map((color) => (
+                <button
+                  key={color}
+                  className={`h-6 w-6 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-1" : ""}`}
+                  onClick={() => {
+                    setSelectedColor(color)
+                    setIsColorMenuOpen(false)
+                  }}
+                  aria-label={`Select ${color} color`}
+                />
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+
+    return (
+      <>
+        {COLORS.map((color) => (
+          <button
+            key={color}
+            className={`h-8 w-8 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""}`}
+            onClick={() => setSelectedColor(color)}
+            aria-label={`Select ${color} color`}
+          />
+        ))}
+      </>
+    )
+  }
+
   return (
     <Card className={`mb-8 ${selectedColor} border transition-colors duration-200`}>
       <CardContent className="pt-6">
@@ -150,14 +196,7 @@ export function NoteForm() {
       {isExpanded && (
         <CardFooter className="flex justify-between">
           <div className="flex space-x-2">
-            {COLORS.map((color) => (
-              <button
-                key={color}
-                className={`h-8 w-8 rounded-full ${color} border ${color === selectedColor ? "ring-2 ring-primary ring-offset-2" : ""}`}
-                onClick={() => setSelectedColor(color)}
-                aria-label={`Select ${color} color`}
-              />
-            ))}
+            <ColorSelector />
           </div>
           <div className="flex space-x-2">
             <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)} title="Manage tags">

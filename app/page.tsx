@@ -11,6 +11,7 @@ import Link from "next/link"
 import { LogOut, User } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useMobile } from "@/hooks/use-mobile"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   const { user, signOut, isLoading } = useAuth()
@@ -102,6 +103,7 @@ export default function Home() {
       <NoteForm />
       <SearchFilter />
       <NotesGrid />
+      <Footer />
     </div>
   )
 }
