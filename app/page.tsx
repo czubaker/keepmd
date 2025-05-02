@@ -61,7 +61,7 @@ export default function Home() {
   if (!user) {
     return (
       <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-bold mb-8">Markdown Notes</h1>
+        <h1 className="text-3xl font-bold mb-8">Keepmd</h1>
         <p className="mb-8 text-center max-w-md">
           A Google Keep clone with markdown support. Sign in to create and manage your notes.
         </p>
@@ -80,7 +80,7 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Markdown Notes</h1>
+        <h1 className="text-2xl font-bold">Keepmd</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 relative">
             <Button variant="ghost" size="icon" className="rounded-full" onClick={handleUserIconClick}>
