@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Markdown Notes - Google Keep Clone",
+  title: "Keepmd - Google Keep Clone",
   description: "A Google Keep clone with markdown support",
     generator: 'v0.dev'
 }
