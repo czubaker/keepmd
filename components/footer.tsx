@@ -7,7 +7,7 @@ export function Footer() {
         <p className="text-sm text-muted-foreground">
           Created by{" "}
           <Link href="https://google.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            Mikhail Lazarevich
+            Mikhail Lazarevich Snake
           </Link>
         </p>
       </div>
