@@ -8,16 +8,18 @@ import { SearchFilter } from "@/components/search-filter"
 import { useAuth } from "@/components/auth/auth-context"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { LogOut, User } from "lucide-react"
+import { LogOut, User, Settings } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useMobile } from "@/hooks/use-mobile"
 import { Footer } from "@/components/footer"
+import { SettingsDialog } from "@/components/settings-dialog"
 
 export default function Home() {
   const { user, signOut, isLoading } = useAuth()
   const router = useRouter()
   const isMobile = useMobile()
   const [showEmail, setShowEmail] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const emailTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleSignOut = async () => {
@@ -80,11 +82,12 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="flex items-center justify-between mb-8">
-        <div className="flex items-center">
-        <img src="/keepmd.svg" alt="KeepMD logo" className="h-10 w-10" />
+        <img src="/keepmd.svg" alt="KeepMD logo" className="h-8 w-8" />
         <h1 className="text-2xl font-bold">Keepmd</h1>
-        </div>
         <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)} title="Settings">
+            <Settings className="h-4 w-4" />
+          </Button>
           <div className="flex items-center gap-2 relative">
             <Button variant="ghost" size="icon" className="rounded-full" onClick={handleUserIconClick}>
               <User className="h-4 w-4" />
@@ -107,6 +110,8 @@ export default function Home() {
       <SearchFilter />
       <NotesGrid />
       <Footer />
+
+      <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
     </div>
   )
 }

@@ -5,7 +5,20 @@ import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { useNotesStore } from "@/lib/store"
-import { Archive, ArchiveRestore, Edit, Eye, EyeOff, Pin, PinOff, Palette, Tag, Trash2, X } from "lucide-react"
+import {
+  Archive,
+  ArchiveRestore,
+  Edit,
+  Eye,
+  EyeOff,
+  Pin,
+  PinOff,
+  Palette,
+  Tag,
+  Trash2,
+  X,
+  Download,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ReactMarkdown from "react-markdown"
 import { format } from "date-fns"
@@ -40,6 +53,7 @@ export function NoteCard({ note }: NoteCardProps) {
   const [isColorMenuOpen, setIsColorMenuOpen] = useState(false)
   const { user } = useAuth()
   const isMobile = useMobile()
+  const noteContentRef = useRef<HTMLDivElement>(null)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -57,6 +71,13 @@ export function NoteCard({ note }: NoteCardProps) {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
     }
   }, [editContent, isEditing])
+
+  // Reset scroll position when opening a note
+  useEffect(() => {
+    if (isExpanded && noteContentRef.current) {
+      noteContentRef.current.scrollTop = 0
+    }
+  }, [isExpanded])
 
   const handleSaveEdit = async () => {
     if (editContent.trim()) {
@@ -93,6 +114,40 @@ export function NoteCard({ note }: NoteCardProps) {
 
   const handleRemoveTag = async (tagId: string) => {
     await removeTagFromNote(note.id, tagId)
+  }
+
+  const handleDownloadNote = () => {
+    // Create a blob with the note content
+    const blob = new Blob([note.content], { type: "text/markdown" })
+
+    // Create a title for the file based on the first line or first few characters
+    let title = note.content.split("\n")[0].replace(/[#*`]/g, "").trim()
+    if (!title || title.length < 3) {
+      title = note.content
+        .substring(0, 20)
+        .replace(/[#*`\n]/g, " ")
+        .trim()
+    }
+    if (!title || title.length < 3) {
+      title = `note-${note.id.substring(0, 8)}`
+    }
+
+    // Create a safe filename
+    const filename = `${title.substring(0, 50).replace(/[/\\?%*:|"<>]/g, "-")}.md`
+
+    // Create a download link and trigger the download
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    }, 100)
   }
 
   const noteTags = note.tags || []
@@ -393,7 +448,17 @@ export function NoteCard({ note }: NoteCardProps) {
               </>
             ) : (
               <>
-                <div className="p-6 overflow-auto" style={{ maxHeight: "calc(90vh - 80px)" }}>
+                <div
+                  ref={noteContentRef}
+                  className="p-6 overflow-auto"
+                  style={{ maxHeight: "calc(90vh - 80px)" }}
+                  onClick={(e) => {
+                    // Prevent clicks on links from scrolling the main page
+                    if ((e.target as HTMLElement).tagName === "A") {
+                      e.stopPropagation()
+                    }
+                  }}
+                >
                   <div className="prose dark:prose-invert max-w-none">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
@@ -434,7 +499,11 @@ export function NoteCard({ note }: NoteCardProps) {
                           )
                         },
                         a: ({ node, ...props }) => (
-                          <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
+                          <a
+                            className="text-blue-600 dark:text-blue-400 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                            {...props}
+                          />
                         ),
                         img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
                         hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
@@ -472,6 +541,9 @@ export function NoteCard({ note }: NoteCardProps) {
                     </Button>
                   </div>
                   <div className="flex gap-2">
+                    <Button variant="ghost" size="icon" onClick={handleDownloadNote} title="Download note as Markdown">
+                      <Download className="h-4 w-4" />
+                    </Button>
                     <Button variant="ghost" size="icon" onClick={() => togglePinned(note.id)}>
                       {note.is_pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
                     </Button>
