@@ -303,7 +303,7 @@ export function NoteCard({ note }: NoteCardProps) {
             </div>
           )}
         </CardContent>
-        <CardFooter className="flex justify-between items-center border-t">
+        <CardFooter className="flex justify-between items-center">
           <span className="text-xs text-muted-foreground">{format(new Date(note.created_at), "MMM d, yyyy")}</span>
           <div className="flex items-center space-x-1">
             <Button
@@ -432,7 +432,7 @@ export function NoteCard({ note }: NoteCardProps) {
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center p-4 border-t w-full mt-auto">
+                <div className="flex justify-between items-center p-4 w-full mt-auto">
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="icon" onClick={() => setShowPreview(!showPreview)}>
                       {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -533,7 +533,7 @@ export function NoteCard({ note }: NoteCardProps) {
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center p-4 border-t w-full mt-auto">
+                <div className="flex justify-between items-center p-4 w-full mt-auto">
                   <div className="flex flex-wrap gap-2 items-center">
                     <ColorSelector />
                     <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)}>

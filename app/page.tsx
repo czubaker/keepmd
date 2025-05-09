@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useState } from "react"
 import { NoteForm } from "@/components/note-form"
 import { NotesGrid } from "@/components/notes-grid"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -8,49 +8,15 @@ import { SearchFilter } from "@/components/search-filter"
 import { useAuth } from "@/components/auth/auth-context"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { LogOut, User, Settings } from "lucide-react"
+import { Settings } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useMobile } from "@/hooks/use-mobile"
 import { Footer } from "@/components/footer"
 import { SettingsDialog } from "@/components/settings-dialog"
 
 export default function Home() {
-  const { user, signOut, isLoading } = useAuth()
+  const { user, isLoading } = useAuth()
   const router = useRouter()
-  const isMobile = useMobile()
-  const [showEmail, setShowEmail] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const emailTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-  const handleSignOut = async () => {
-    await signOut()
-    router.push("/login")
-  }
-
-  const handleUserIconClick = () => {
-    if (isMobile && user) {
-      setShowEmail(true)
-
-      // Clear any existing timeout
-      if (emailTimeoutRef.current) {
-        clearTimeout(emailTimeoutRef.current)
-      }
-
-      // Hide email after 3 seconds
-      emailTimeoutRef.current = setTimeout(() => {
-        setShowEmail(false)
-      }, 3000)
-    }
-  }
-
-  // Clean up timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (emailTimeoutRef.current) {
-        clearTimeout(emailTimeoutRef.current)
-      }
-    }
-  }, [])
 
   if (isLoading) {
     return (
@@ -82,27 +48,11 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="flex items-center justify-between mb-8">
-        <img src="/keepmd.svg" alt="KeepMD logo" className="h-8 w-8" />
         <h1 className="text-2xl font-bold">Keepmd</h1>
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)} title="Settings">
             <Settings className="h-4 w-4" />
-          </Button>
-          <div className="flex items-center gap-2 relative">
-            <Button variant="ghost" size="icon" className="rounded-full" onClick={handleUserIconClick}>
-              <User className="h-4 w-4" />
-            </Button>
-            {(!isMobile || showEmail) && (
-              <span
-                className={`text-sm transition-opacity duration-300 ${showEmail ? "opacity-100" : ""} ${isMobile ? "absolute left-10 bg-background/90 p-2 rounded shadow-md" : ""}`}
-              >
-                {user.email}
-              </span>
-            )}
-          </div>
-          <ThemeToggle />
-          <Button variant="ghost" size="icon" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </header>
