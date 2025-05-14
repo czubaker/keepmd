@@ -222,6 +222,61 @@ export function NoteCard({ note }: NoteCardProps) {
     )
   }
 
+  // Define markdown components with proper nesting
+  const markdownComponents = {
+    // Handle code blocks at the root level to avoid nesting issues
+    code: ({ node, inline, className, children }) => {
+      const match = /language-(\w+)/.exec(className || "")
+      if (!inline) {
+        return (
+          <div className="my-4">
+            <pre className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto`}>
+              <code className={className}>{children}</code>
+            </pre>
+          </div>
+        )
+      }
+      return <code className="bg-muted px-1 py-0.5 rounded text-sm">{children}</code>
+    },
+    p: ({ children }) => <div className="mt-2 mb-2">{children}</div>,
+    h1: ({ children }) => <h1 className="text-3xl font-bold mt-0 mb-3">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-2xl font-bold mt-4 mb-2">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-xl font-bold mt-3 mb-2">{children}</h3>,
+    h4: ({ children }) => <h4 className="text-lg font-bold mt-3 mb-1">{children}</h4>,
+    h5: ({ children }) => <h5 className="text-base font-bold mt-3 mb-1">{children}</h5>,
+    h6: ({ children }) => <h6 className="text-sm font-bold mt-3 mb-1">{children}</h6>,
+    ul: ({ children }) => <ul className="list-disc pl-5 mt-2 mb-2">{children}</ul>,
+    ol: ({ children }) => <ol className="list-decimal pl-5 mt-2 mb-2">{children}</ol>,
+    li: ({ children, className, checked }) => {
+      if (className?.includes("task-list-item")) {
+        return (
+          <li className="flex items-start mt-1">
+            <input type="checkbox" checked={checked} readOnly className="mt-1 mr-2" />
+            <span>{children}</span>
+          </li>
+        )
+      }
+      return <li className="mt-1">{children}</li>
+    },
+    blockquote: ({ children }) => <blockquote className="border-l-4 pl-4 italic my-2">{children}</blockquote>,
+    a: ({ href, children }) => (
+      <a href={href} className="text-blue-600 dark:text-blue-400 hover:underline">
+        {children}
+      </a>
+    ),
+    img: ({ src, alt }) => <img src={src || "/placeholder.svg"} alt={alt} className="max-w-full h-auto my-2 rounded" />,
+    hr: () => <hr className="my-4 border-muted" />,
+    table: ({ children }) => <table className="border-collapse w-full my-2">{children}</table>,
+    th: ({ children }) => <th className="border border-muted p-2 bg-muted/50">{children}</th>,
+    td: ({ children }) => <td className="border border-muted p-2">{children}</td>,
+    del: ({ children }) => <del className="line-through">{children}</del>,
+    em: ({ children }) => <em className="italic">{children}</em>,
+    strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+    sub: ({ children }) => <sub>{children}</sub>,
+    sup: ({ children }) => <sup>{children}</sup>,
+    mark: ({ children }) => <mark className="bg-yellow-200 dark:bg-yellow-800">{children}</mark>,
+  }
+
   return (
     <>
       <Card
@@ -230,56 +285,7 @@ export function NoteCard({ note }: NoteCardProps) {
       >
         <CardContent className="pt-6 flex-grow overflow-hidden max-h-[300px]">
           <div className="prose dark:prose-invert prose-sm max-w-none break-words">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
-              components={{
-                h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
-                h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
-                h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
-                h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
-                h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
-                h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
-                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
-                ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
-                li: ({ node, className, ...props }) => {
-                  if (className?.includes("task-list-item")) {
-                    return (
-                      <li className="flex items-start mt-1">
-                        <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
-                        <span>{props.children}</span>
-                      </li>
-                    )
-                  }
-                  return <li className="mt-1" {...props} />
-                },
-                p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
-                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 pl-4 italic my-2" {...props} />,
-                code: ({ node, inline, className, ...props }) => {
-                  const match = /language-(\w+)/.exec(className || "")
-                  return !inline ? (
-                    <pre className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}>
-                      <code className={className} {...props} />
-                    </pre>
-                  ) : (
-                    <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
-                  )
-                },
-                a: ({ node, ...props }) => (
-                  <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
-                ),
-                img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
-                hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
-                table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
-                th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
-                td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
-                del: ({ node, ...props }) => <del className="line-through" {...props} />,
-                em: ({ node, ...props }) => <em className="italic" {...props} />,
-                strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-                sub: ({ node, ...props }) => <sub {...props} />,
-                sup: ({ node, ...props }) => <sup {...props} />,
-                mark: ({ node, ...props }) => <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />,
-              }}
-            >
+            <ReactMarkdown remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]} components={markdownComponents}>
               {note.content}
             </ReactMarkdown>
           </div>
@@ -364,65 +370,7 @@ export function NoteCard({ note }: NoteCardProps) {
                         <div className="prose dark:prose-invert prose-sm max-w-none">
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
-                            components={{
-                              h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
-                              h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
-                              h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
-                              h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
-                              h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
-                              h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
-                              ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
-                              ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
-                              li: ({ node, className, ...props }) => {
-                                if (className?.includes("task-list-item")) {
-                                  return (
-                                    <li className="flex items-start mt-1">
-                                      <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
-                                      <span>{props.children}</span>
-                                    </li>
-                                  )
-                                }
-                                return <li className="mt-1" {...props} />
-                              },
-                              p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
-                              blockquote: ({ node, ...props }) => (
-                                <blockquote className="border-l-4 pl-4 italic my-2" {...props} />
-                              ),
-                              code: ({ node, inline, className, ...props }) => {
-                                const match = /language-(\w+)/.exec(className || "")
-                                return !inline ? (
-                                  <pre
-                                    className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}
-                                  >
-                                    <code className={className} {...props} />
-                                  </pre>
-                                ) : (
-                                  <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
-                                )
-                              },
-                              a: ({ node, ...props }) => (
-                                <a className="text-blue-600 dark:text-blue-400 hover:underline" {...props} />
-                              ),
-                              img: ({ node, ...props }) => (
-                                <img className="max-w-full h-auto my-2 rounded" {...props} />
-                              ),
-                              hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
-                              table: ({ node, ...props }) => (
-                                <table className="border-collapse w-full my-2" {...props} />
-                              ),
-                              th: ({ node, ...props }) => (
-                                <th className="border border-muted p-2 bg-muted/50" {...props} />
-                              ),
-                              td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
-                              del: ({ node, ...props }) => <del className="line-through" {...props} />,
-                              em: ({ node, ...props }) => <em className="italic" {...props} />,
-                              strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-                              sub: ({ node, ...props }) => <sub {...props} />,
-                              sup: ({ node, ...props }) => <sup {...props} />,
-                              mark: ({ node, ...props }) => (
-                                <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />
-                              ),
-                            }}
+                            components={markdownComponents}
                           >
                             {editContent}
                           </ReactMarkdown>
@@ -462,61 +410,7 @@ export function NoteCard({ note }: NoteCardProps) {
                   <div className="prose dark:prose-invert max-w-none">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm, remarkEmoji, remarkSupersub]}
-                      components={{
-                        h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-0 mb-3" {...props} />,
-                        h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-4 mb-2" {...props} />,
-                        h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-3 mb-2" {...props} />,
-                        h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
-                        h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-3 mb-1" {...props} />,
-                        h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-3 mb-1" {...props} />,
-                        ul: ({ node, ...props }) => <ul className="list-disc pl-5 mt-2 mb-2" {...props} />,
-                        ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mt-2 mb-2" {...props} />,
-                        li: ({ node, className, ...props }) => {
-                          if (className?.includes("task-list-item")) {
-                            return (
-                              <li className="flex items-start mt-1">
-                                <input type="checkbox" checked={props.checked} readOnly className="mt-1 mr-2" />
-                                <span>{props.children}</span>
-                              </li>
-                            )
-                          }
-                          return <li className="mt-1" {...props} />
-                        },
-                        p: ({ node, ...props }) => <p className="mt-2 mb-2" {...props} />,
-                        blockquote: ({ node, ...props }) => (
-                          <blockquote className="border-l-4 pl-4 italic my-2" {...props} />
-                        ),
-                        code: ({ node, inline, className, ...props }) => {
-                          const match = /language-(\w+)/.exec(className || "")
-                          return !inline ? (
-                            <pre
-                              className={`${match ? `language-${match[1]}` : ""} bg-muted p-2 rounded overflow-x-auto my-2`}
-                            >
-                              <code className={className} {...props} />
-                            </pre>
-                          ) : (
-                            <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} />
-                          )
-                        },
-                        a: ({ node, ...props }) => (
-                          <a
-                            className="text-blue-600 dark:text-blue-400 hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                            {...props}
-                          />
-                        ),
-                        img: ({ node, ...props }) => <img className="max-w-full h-auto my-2 rounded" {...props} />,
-                        hr: ({ node, ...props }) => <hr className="my-4 border-muted" {...props} />,
-                        table: ({ node, ...props }) => <table className="border-collapse w-full my-2" {...props} />,
-                        th: ({ node, ...props }) => <th className="border border-muted p-2 bg-muted/50" {...props} />,
-                        td: ({ node, ...props }) => <td className="border border-muted p-2" {...props} />,
-                        del: ({ node, ...props }) => <del className="line-through" {...props} />,
-                        em: ({ node, ...props }) => <em className="italic" {...props} />,
-                        strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-                        sub: ({ node, ...props }) => <sub {...props} />,
-                        sup: ({ node, ...props }) => <sup {...props} />,
-                        mark: ({ node, ...props }) => <mark className="bg-yellow-200 dark:bg-yellow-800" {...props} />,
-                      }}
+                      components={markdownComponents}
                     >
                       {note.content}
                     </ReactMarkdown>
