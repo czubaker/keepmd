@@ -14,10 +14,20 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ActivityCalendar } from "./activity-calendar"
+import { format } from "date-fns"
 
 export function SearchFilter() {
-  const { searchQuery, setSearchQuery, tags, selectedTags, setSelectedTags, showArchived, toggleShowArchived } =
-    useNotesStore()
+  const {
+    searchQuery,
+    setSearchQuery,
+    tags,
+    selectedTags,
+    setSelectedTags,
+    showArchived,
+    toggleShowArchived,
+    dateFilter,
+  } = useNotesStore()
   const [isSearchFocused, setIsSearchFocused] = useState(false)
 
   const handleTagToggle = (tagId: string) => {
@@ -36,7 +46,7 @@ export function SearchFilter() {
     }
   }
 
-  const hasActiveFilters = searchQuery || selectedTags.length > 0 || showArchived
+  const hasActiveFilters = searchQuery || selectedTags.length > 0 || showArchived || dateFilter
 
   return (
     <div className="mb-6 space-y-4">
@@ -62,6 +72,8 @@ export function SearchFilter() {
             </Button>
           )}
         </div>
+
+        <ActivityCalendar />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -117,6 +129,14 @@ export function SearchFilter() {
               </Badge>
             ) : null
           })}
+        </div>
+      )}
+
+      {dateFilter && (
+        <div className="flex items-center">
+          <Badge variant="outline" className="flex items-center gap-1">
+            Date: {format(dateFilter, "MMM d, yyyy")}
+          </Badge>
         </div>
       )}
     </div>

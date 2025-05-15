@@ -5,6 +5,7 @@ import { useNotesStore } from "@/lib/store"
 import { NoteCard } from "./note-card"
 import { useAuth } from "./auth/auth-context"
 import type { Note } from "@/lib/types"
+import { isSameDay } from "date-fns"
 
 export function NotesGrid() {
   const {
@@ -14,6 +15,7 @@ export function NotesGrid() {
     searchQuery,
     selectedTags,
     showArchived,
+    dateFilter,
     setupRealtimeSubscription,
     cleanupSubscription,
   } = useNotesStore()
@@ -51,7 +53,7 @@ export function NotesGrid() {
     )
   }
 
-  // Filter notes based on search query, selected tags, and archive status
+  // Filter notes based on search query, selected tags, archive status, and date
   const filteredNotes = notes.filter((note: Note) => {
     // Filter by archive status
     if (!showArchived && note.is_archived) return false
@@ -67,6 +69,14 @@ export function NotesGrid() {
       const noteTags = note.tags || []
       const noteTagIds = noteTags.map((tag: any) => tag.id)
       if (!selectedTags.some((tagId) => noteTagIds.includes(tagId))) {
+        return false
+      }
+    }
+
+    // Filter by date
+    if (dateFilter) {
+      const noteDate = new Date(note.created_at)
+      if (!isSameDay(noteDate, dateFilter)) {
         return false
       }
     }
