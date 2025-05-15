@@ -34,7 +34,9 @@
     "showArchivedNotes": "Show archived notes",
     "showingArchivedNotes": "Showing archived notes",
     "clearFilters": "Clear filters",
-    "date": "Date"
+    "date": "Date",
+    "created": "Created",
+    "modified": "Modified"
   },
   "actions": {
     "add": "Add",
@@ -52,6 +54,7 @@
     "account": "Account",
     "appearance": "Appearance",
     "language": "Language",
+    "selectLanguage": "Select language",
     "downloadNotes": "Download Notes",
     "downloadAllNotes": "Download All Notes",
     "downloadNotesByTags": "Download Notes by Tags",
@@ -67,6 +70,8 @@
       "be": "Belarusian",
       "uk": "Ukrainian",
       "kk": "Kazakh"
-    }
+    },
+    "sortByModified": "Sort by last modified",
+    "sortByModifiedDescription": "When enabled, notes will be sorted by modification date instead of creation date"
   }
 }

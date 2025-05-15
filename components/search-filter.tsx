@@ -114,8 +114,8 @@ export function SearchFilter() {
         </Button>
 
         {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={handleClearFilters}>
-            {t("notes.clearFilters")}
+          <Button variant="ghost" size="icon" onClick={handleClearFilters} title={t("notes.clearFilters")}>
+            <X className="h-4 w-4" />
           </Button>
         )}
       </div>

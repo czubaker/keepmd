@@ -19,6 +19,7 @@ export function NotesGrid() {
     selectedDates,
     setupRealtimeSubscription,
     cleanupSubscription,
+    sortByModified,
   } = useNotesStore()
   const { user, isLoading: isAuthLoading } = useAuth()
   const { t } = useLanguage()
@@ -56,35 +57,46 @@ export function NotesGrid() {
   }
 
   // Filter notes based on search query, selected tags, archive status, and dates
-  const filteredNotes = notes.filter((note: Note) => {
-    // Filter by archive status
-    if (!showArchived && note.is_archived) return false
-    if (showArchived && !note.is_archived) return false
+  const filteredNotes = notes
+    .filter((note: Note) => {
+      // Filter by archive status
+      if (!showArchived && note.is_archived) return false
+      if (showArchived && !note.is_archived) return false
 
-    // Filter by search query
-    if (searchQuery && !note.content.toLowerCase().includes(searchQuery.toLowerCase())) {
-      return false
-    }
-
-    // Filter by selected tags
-    if (selectedTags.length > 0) {
-      const noteTags = note.tags || []
-      const noteTagIds = noteTags.map((tag: any) => tag.id)
-      if (!selectedTags.some((tagId) => noteTagIds.includes(tagId))) {
+      // Filter by search query
+      if (searchQuery && !note.content.toLowerCase().includes(searchQuery.toLowerCase())) {
         return false
       }
-    }
 
-    // Filter by selected dates
-    if (selectedDates.length > 0) {
-      const noteDate = new Date(note.created_at)
-      if (!selectedDates.some((date) => isSameDay(noteDate, date))) {
-        return false
+      // Filter by selected tags
+      if (selectedTags.length > 0) {
+        const noteTags = note.tags || []
+        const noteTagIds = noteTags.map((tag: any) => tag.id)
+        if (!selectedTags.some((tagId) => noteTagIds.includes(tagId))) {
+          return false
+        }
       }
-    }
 
-    return true
-  })
+      // Filter by selected dates
+      if (selectedDates.length > 0) {
+        const noteDate = new Date(note.created_at)
+        if (!selectedDates.some((date) => isSameDay(noteDate, date))) {
+          return false
+        }
+      }
+
+      return true
+    })
+    .sort((a, b) => {
+      // Sort by pinned status first
+      if (a.is_pinned && !b.is_pinned) return -1
+      if (!a.is_pinned && b.is_pinned) return 1
+
+      // Then sort by date based on the sortByModified setting
+      const dateA = new Date(sortByModified ? a.updated_at : a.created_at)
+      const dateB = new Date(sortByModified ? b.updated_at : b.created_at)
+      return dateB.getTime() - dateA.getTime() // Newest first
+    })
 
   // Separate pinned and unpinned notes
   const pinnedNotes = filteredNotes.filter((note: Note) => note.is_pinned)

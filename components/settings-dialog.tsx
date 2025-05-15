@@ -15,6 +15,9 @@ import type { Note, Tag } from "@/lib/types"
 import { useLanguage, type LanguageCode } from "./language-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// Add the sort order switch to the settings dialog
+// First, import the Switch component
+import { Switch } from "@/components/ui/switch"
 
 interface SettingsDialogProps {
   open: boolean
@@ -22,7 +25,8 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  const { notes, tags } = useNotesStore()
+  // Then, add the sortByModified state to the component
+  const { notes, tags, sortByModified, toggleSortOrder } = useNotesStore()
   const { user, signOut } = useAuth()
   const router = useRouter()
   const { language, setLanguage, t } = useLanguage()
@@ -198,28 +202,36 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 </Button>
               </div>
             </div>
+
+            <div className="border-t pt-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-medium">{t("settings.sortByModified")}</h4>
+                  <p className="text-xs text-muted-foreground">{t("settings.sortByModifiedDescription")}</p>
+                </div>
+                <Switch
+                  checked={sortByModified}
+                  onCheckedChange={toggleSortOrder}
+                  aria-label={t("settings.sortByModified")}
+                />
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="language" className="space-y-4">
             <div>
-              <h3 className="text-lg font-medium">{t("settings.language")}</h3>
-              <div className="mt-2">
-                <Label htmlFor="language-select" className="mb-2 block">
-                  {t("settings.language")}
-                </Label>
-                <Select value={language} onValueChange={handleLanguageChange}>
-                  <SelectTrigger id="language-select">
-                    <SelectValue placeholder={t("settings.language")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {languages.map((lang) => (
-                      <SelectItem key={lang.code} value={lang.code}>
-                        {lang.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select value={language} onValueChange={handleLanguageChange}>
+                <SelectTrigger id="language-select">
+                  <SelectValue placeholder={t("settings.selectLanguage")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {languages.map((lang) => (
+                    <SelectItem key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </TabsContent>
 

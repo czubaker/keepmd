@@ -262,7 +262,7 @@ export function NoteCard({ note }: NoteCardProps) {
     },
     blockquote: ({ children }) => <blockquote className="border-l-4 pl-4 italic my-2">{children}</blockquote>,
     a: ({ href, children }) => (
-      <a href={href} className="text-blue-600 dark:text-blue-400 hover:underline">
+      <a href={href} className="text-blue-600 dark:text-blue-400 hover.underline">
         {children}
       </a>
     ),
@@ -312,7 +312,7 @@ export function NoteCard({ note }: NoteCardProps) {
           )}
         </CardContent>
         <CardFooter className="flex justify-between items-center">
-          <span className="text-xs text-muted-foreground">{format(new Date(note.created_at), "MMM d, yyyy")}</span>
+          <span className="text-xs text-muted-foreground">{format(new Date(note.created_at), "dd/MM/yyyy")}</span>
           <div className="flex items-center space-x-1">
             <Button
               variant="ghost"
@@ -426,6 +426,14 @@ export function NoteCard({ note }: NoteCardProps) {
                         ))}
                       </div>
                     )}
+                  </div>
+                  <div className="mt-4 text-xs text-muted-foreground">
+                    <div>
+                      {t("notes.created")}: {format(new Date(note.created_at), "dd/MM/yyyy HH:mm")}
+                    </div>
+                    <div>
+                      {t("notes.modified")}: {format(new Date(note.updated_at), "dd/MM/yyyy HH:mm")}
+                    </div>
                   </div>
                 </div>
 

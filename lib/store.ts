@@ -14,6 +14,7 @@ interface NotesState {
   showArchived: boolean
   selectedDates: Date[]
   subscription: RealtimeChannel | null
+  sortByModified: boolean
 
   // Fetch operations
   fetchNotes: (userId: string) => Promise<void>
@@ -39,6 +40,7 @@ interface NotesState {
   setSelectedTags: (tags: string[]) => void
   toggleShowArchived: () => void
   setSelectedDates: (dates: Date[]) => void
+  toggleSortOrder: () => void
 }
 
 export const useNotesStore = create<NotesState>((set, get) => ({
@@ -50,6 +52,7 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   showArchived: false,
   selectedDates: [],
   subscription: null,
+  sortByModified: false,
 
   setupRealtimeSubscription: (userId: string) => {
     // Clean up existing subscription if any
@@ -368,4 +371,5 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   setSelectedTags: (tags) => set({ selectedTags: tags }),
   toggleShowArchived: () => set((state) => ({ showArchived: !state.showArchived })),
   setSelectedDates: (dates) => set({ selectedDates: dates }),
+  toggleSortOrder: () => set((state) => ({ sortByModified: !state.sortByModified })),
 }))
