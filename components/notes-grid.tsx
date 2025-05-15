@@ -6,6 +6,7 @@ import { NoteCard } from "./note-card"
 import { useAuth } from "./auth/auth-context"
 import type { Note } from "@/lib/types"
 import { isSameDay } from "date-fns"
+import { useLanguage } from "./language-context"
 
 export function NotesGrid() {
   const {
@@ -20,6 +21,7 @@ export function NotesGrid() {
     cleanupSubscription,
   } = useNotesStore()
   const { user, isLoading: isAuthLoading } = useAuth()
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (user) {
@@ -48,7 +50,7 @@ export function NotesGrid() {
   if (!user) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Please log in to view your notes</p>
+        <p className="text-muted-foreground">{t("auth.login")}</p>
       </div>
     )
   }
@@ -93,10 +95,10 @@ export function NotesGrid() {
       <div className="text-center py-12">
         <p className="text-muted-foreground">
           {notes.length === 0
-            ? "No notes yet. Create your first note above!"
+            ? t("notes.noNotes")
             : showArchived
-              ? "No archived notes found."
-              : "No notes match your current filters."}
+              ? t("notes.noArchivedNotes")
+              : t("notes.noMatchingNotes")}
         </p>
       </div>
     )
@@ -106,7 +108,7 @@ export function NotesGrid() {
     <div className="space-y-8">
       {pinnedNotes.length > 0 && (
         <div>
-          <h2 className="text-lg font-medium mb-4">Pinned</h2>
+          <h2 className="text-lg font-medium mb-4">{t("notes.pinned")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {pinnedNotes.map((note: Note) => (
               <NoteCard key={note.id} note={note} />
@@ -117,7 +119,7 @@ export function NotesGrid() {
 
       {unpinnedNotes.length > 0 && (
         <div>
-          {pinnedNotes.length > 0 && <h2 className="text-lg font-medium mb-4">Others</h2>}
+          {pinnedNotes.length > 0 && <h2 className="text-lg font-medium mb-4">{t("notes.others")}</h2>}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {unpinnedNotes.map((note: Note) => (
               <NoteCard key={note.id} note={note} />

@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Dialog,
   DialogContent,
@@ -8,8 +10,11 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { HelpCircle } from "lucide-react"
+import { useLanguage } from "./language-context"
 
 export function MarkdownHelp() {
+  const { t } = useLanguage()
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -21,7 +26,7 @@ export function MarkdownHelp() {
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Markdown Guide</DialogTitle>
-          <DialogDescription>Format your notes with these Markdown shortcuts</DialogDescription>
+          <DialogDescription>{t("notes.markdownSupported")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 text-sm">
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">

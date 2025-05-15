@@ -7,10 +7,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils"
 import { useNotesStore } from "@/lib/store"
 import { ActivityCalendar } from "./activity-calendar"
+import { useLanguage } from "./language-context"
 
 export function CalendarFilter() {
   const { selectedDates, setSelectedDates } = useNotesStore()
   const [open, setOpen] = useState(false)
+  const { t } = useLanguage()
 
   const handleSelectDates = (dates: Date[]) => {
     setSelectedDates(dates)
@@ -33,7 +35,7 @@ export function CalendarFilter() {
         {selectedDates.length > 0 && (
           <div className="p-2 border-t">
             <Button variant="ghost" size="sm" className="w-full justify-center" onClick={clearDates}>
-              Clear dates
+              {t("notes.clearFilters")}
             </Button>
           </div>
         )}

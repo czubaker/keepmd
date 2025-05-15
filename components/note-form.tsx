@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/ui/input"
 import { useMobile } from "@/hooks/use-mobile"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useLanguage } from "./language-context"
 
 const COLORS = [
   "bg-white dark:bg-zinc-800",
@@ -40,6 +41,7 @@ export function NoteForm() {
   const { user } = useAuth()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const isMobile = useMobile()
+  const { t } = useLanguage()
 
   // Auto-resize textarea
   useEffect(() => {
@@ -153,7 +155,7 @@ export function NoteForm() {
           <div className="relative">
             <Textarea
               ref={textareaRef}
-              placeholder="Take a note... (Markdown supported)"
+              placeholder={`${t("notes.takeNote")} (Markdown ${t("notes.markdownSupported").toLowerCase()})`}
               className="min-h-[100px] resize-none border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 pr-8"
               value={content}
               onChange={handleContentChange}
@@ -164,7 +166,7 @@ export function NoteForm() {
             </div>
             {isExpanded && (
               <div className="text-xs text-muted-foreground mt-1 flex items-center">
-                <span>Markdown is supported.</span>
+                <span>{t("notes.markdownSupported")}</span>
               </div>
             )}
             <NotePreview content={content} />
@@ -188,7 +190,7 @@ export function NoteForm() {
         ) : (
           <div className="flex items-center cursor-text p-2" onClick={() => setIsExpanded(true)}>
             <PlusCircle className="mr-2 h-5 w-5 text-muted-foreground" />
-            <span className="text-muted-foreground">Take a note...</span>
+            <span className="text-muted-foreground">{t("notes.takeNote")}</span>
           </div>
         )}
       </CardContent>
@@ -199,7 +201,7 @@ export function NoteForm() {
             <ColorSelector />
           </div>
           <div className="flex space-x-2">
-            <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)} title="Manage tags">
+            <Button variant="ghost" size="icon" onClick={() => setIsTagDialogOpen(true)} title={t("notes.manageTags")}>
               <Tag className="h-4 w-4" />
             </Button>
             <Button
@@ -214,7 +216,7 @@ export function NoteForm() {
               <X className="h-4 w-4" />
             </Button>
             <Button size="sm" onClick={handleSubmit}>
-              Add
+              {t("actions.add")}
             </Button>
           </div>
         </CardFooter>
@@ -223,11 +225,11 @@ export function NoteForm() {
       <Dialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Manage Tags</DialogTitle>
+            <DialogTitle>{t("notes.manageTags")}</DialogTitle>
           </DialogHeader>
           <div className="flex items-center space-x-2">
             <Input
-              placeholder="Add new tag"
+              placeholder={t("notes.addNewTag")}
               value={newTagName}
               onChange={(e) => setNewTagName(e.target.value)}
               onKeyDown={(e) => {
@@ -236,10 +238,10 @@ export function NoteForm() {
                 }
               }}
             />
-            <Button onClick={handleAddTag}>Add</Button>
+            <Button onClick={handleAddTag}>{t("actions.add")}</Button>
           </div>
           <div className="mt-4">
-            <h4 className="mb-2 text-sm font-medium">Available Tags</h4>
+            <h4 className="mb-2 text-sm font-medium">{t("notes.availableTags")}</h4>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => {
                 const isSelected = selectedTags.includes(tag.id)
@@ -257,7 +259,7 @@ export function NoteForm() {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={() => setIsTagDialogOpen(false)}>Done</Button>
+            <Button onClick={() => setIsTagDialogOpen(false)}>{t("actions.done")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

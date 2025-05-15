@@ -34,6 +34,7 @@ import remarkSupersub from "remark-supersub"
 import { MarkdownHelp } from "./markdown-help"
 import { useMobile } from "@/hooks/use-mobile"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useLanguage } from "./language-context"
 
 interface NoteCardProps {
   note: Note
@@ -54,6 +55,7 @@ export function NoteCard({ note }: NoteCardProps) {
   const { user } = useAuth()
   const isMobile = useMobile()
   const noteContentRef = useRef<HTMLDivElement>(null)
+  const { t } = useLanguage()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -389,7 +391,7 @@ export function NoteCard({ note }: NoteCardProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={handleDiscardChanges}>
-                      Close without saving
+                      {t("actions.closeWithoutSaving")}
                     </Button>
                   </div>
                 </div>
@@ -435,7 +437,7 @@ export function NoteCard({ note }: NoteCardProps) {
                     </Button>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" onClick={handleDownloadNote} title="Download note as Markdown">
+                    <Button variant="ghost" size="icon" onClick={handleDownloadNote} title={t("actions.download")}>
                       <Download className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => togglePinned(note.id)}>
@@ -468,11 +470,11 @@ export function NoteCard({ note }: NoteCardProps) {
       <Dialog open={isTagDialogOpen} onOpenChange={setIsTagDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Manage Tags</DialogTitle>
+            <DialogTitle>{t("notes.manageTags")}</DialogTitle>
           </DialogHeader>
           <div className="flex items-center space-x-2">
             <Input
-              placeholder="Add new tag"
+              placeholder={t("notes.addNewTag")}
               value={newTagName}
               onChange={(e) => setNewTagName(e.target.value)}
               onKeyDown={(e) => {
@@ -481,10 +483,10 @@ export function NoteCard({ note }: NoteCardProps) {
                 }
               }}
             />
-            <Button onClick={handleAddTag}>Add</Button>
+            <Button onClick={handleAddTag}>{t("actions.add")}</Button>
           </div>
           <div className="mt-4">
-            <h4 className="mb-2 text-sm font-medium">Available Tags</h4>
+            <h4 className="mb-2 text-sm font-medium">{t("notes.availableTags")}</h4>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => {
                 const isSelected = noteTags.some((t: TagType) => t.id === tag.id)
@@ -508,7 +510,7 @@ export function NoteCard({ note }: NoteCardProps) {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={() => setIsTagDialogOpen(false)}>Done</Button>
+            <Button onClick={() => setIsTagDialogOpen(false)}>{t("actions.done")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

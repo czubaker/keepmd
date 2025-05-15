@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkEmoji from "remark-emoji"
 import remarkSupersub from "remark-supersub"
+import { useLanguage } from "./language-context"
 
 interface NotePreviewProps {
   content: string
@@ -14,6 +15,7 @@ interface NotePreviewProps {
 
 export function NotePreview({ content }: NotePreviewProps) {
   const [showPreview, setShowPreview] = useState(false)
+  const { t } = useLanguage()
 
   if (!content.trim()) {
     return null
@@ -80,11 +82,11 @@ export function NotePreview({ content }: NotePreviewProps) {
         <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={() => setShowPreview(!showPreview)}>
           {showPreview ? (
             <>
-              <EyeOff className="h-3 w-3 mr-1" /> Hide Preview
+              <EyeOff className="h-3 w-3 mr-1" /> {t("notes.hidePreview")}
             </>
           ) : (
             <>
-              <Eye className="h-3 w-3 mr-1" /> Preview
+              <Eye className="h-3 w-3 mr-1" /> {t("notes.preview")}
             </>
           )}
         </Button>

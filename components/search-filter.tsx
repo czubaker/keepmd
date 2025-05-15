@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { CalendarFilter } from "./calendar-filter"
 import { format } from "date-fns"
+import { useLanguage } from "./language-context"
 
 export function SearchFilter() {
   const {
@@ -30,6 +31,7 @@ export function SearchFilter() {
     setSelectedDates,
   } = useNotesStore()
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const { t } = useLanguage()
 
   const handleTagToggle = (tagId: string) => {
     if (selectedTags.includes(tagId)) {
@@ -56,7 +58,7 @@ export function SearchFilter() {
         <div className={`relative flex-grow ${isSearchFocused ? "ring-2 ring-primary ring-offset-2" : ""}`}>
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search notes..."
+            placeholder={t("notes.searchNotes")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-8"
@@ -84,10 +86,10 @@ export function SearchFilter() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Filter by Tags</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("notes.filterByTags")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {tags.length === 0 ? (
-              <div className="px-2 py-1.5 text-sm text-muted-foreground">No tags available</div>
+              <div className="px-2 py-1.5 text-sm text-muted-foreground">{t("notes.noTagsAvailable")}</div>
             ) : (
               tags.map((tag) => (
                 <DropdownMenuCheckboxItem
@@ -106,14 +108,14 @@ export function SearchFilter() {
           variant={showArchived ? "default" : "outline"}
           size="icon"
           onClick={toggleShowArchived}
-          title={showArchived ? "Showing archived notes" : "Show archived notes"}
+          title={showArchived ? t("notes.showingArchivedNotes") : t("notes.showArchivedNotes")}
         >
           <Archive className="h-4 w-4" />
         </Button>
 
         {hasActiveFilters && (
           <Button variant="ghost" size="sm" onClick={handleClearFilters}>
-            Clear filters
+            {t("notes.clearFilters")}
           </Button>
         )}
       </div>
@@ -138,7 +140,7 @@ export function SearchFilter() {
         <div className="flex flex-wrap gap-2">
           {selectedDates.map((date, index) => (
             <Badge key={index} variant="outline" className="flex items-center gap-1">
-              {format(date, "MMM d, yyyy")}
+              {t("notes.date")}: {format(date, "MMM d, yyyy")}
               <button
                 onClick={() => setSelectedDates(selectedDates.filter((d, i) => i !== index))}
                 className="h-3 w-3 rounded-full"
