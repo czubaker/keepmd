@@ -14,7 +14,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { DatePicker } from "./date-picker"
+import { CalendarFilter } from "./calendar-filter"
 import { format } from "date-fns"
 
 export function SearchFilter() {
@@ -26,7 +26,8 @@ export function SearchFilter() {
     setSelectedTags,
     showArchived,
     toggleShowArchived,
-    dateFilter,
+    selectedDates,
+    setSelectedDates,
   } = useNotesStore()
   const [isSearchFocused, setIsSearchFocused] = useState(false)
 
@@ -41,12 +42,13 @@ export function SearchFilter() {
   const handleClearFilters = () => {
     setSearchQuery("")
     setSelectedTags([])
+    setSelectedDates([])
     if (showArchived) {
       toggleShowArchived()
     }
   }
 
-  const hasActiveFilters = searchQuery || selectedTags.length > 0 || showArchived || dateFilter
+  const hasActiveFilters = searchQuery || selectedTags.length > 0 || showArchived || selectedDates.length > 0
 
   return (
     <div className="mb-6 space-y-4">
@@ -73,7 +75,7 @@ export function SearchFilter() {
           )}
         </div>
 
-        <DatePicker />
+        <CalendarFilter />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -132,11 +134,19 @@ export function SearchFilter() {
         </div>
       )}
 
-      {dateFilter && (
-        <div className="flex items-center">
-          <Badge variant="outline" className="flex items-center gap-1">
-            Date: {format(dateFilter, "MMM d, yyyy")}
-          </Badge>
+      {selectedDates.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {selectedDates.map((date, index) => (
+            <Badge key={index} variant="outline" className="flex items-center gap-1">
+              {format(date, "MMM d, yyyy")}
+              <button
+                onClick={() => setSelectedDates(selectedDates.filter((d, i) => i !== index))}
+                className="h-3 w-3 rounded-full"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          ))}
         </div>
       )}
     </div>

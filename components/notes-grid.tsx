@@ -15,7 +15,7 @@ export function NotesGrid() {
     searchQuery,
     selectedTags,
     showArchived,
-    dateFilter,
+    selectedDates,
     setupRealtimeSubscription,
     cleanupSubscription,
   } = useNotesStore()
@@ -53,7 +53,7 @@ export function NotesGrid() {
     )
   }
 
-  // Filter notes based on search query, selected tags, archive status, and date
+  // Filter notes based on search query, selected tags, archive status, and dates
   const filteredNotes = notes.filter((note: Note) => {
     // Filter by archive status
     if (!showArchived && note.is_archived) return false
@@ -73,10 +73,10 @@ export function NotesGrid() {
       }
     }
 
-    // Filter by date
-    if (dateFilter) {
+    // Filter by selected dates
+    if (selectedDates.length > 0) {
       const noteDate = new Date(note.created_at)
-      if (!isSameDay(noteDate, dateFilter)) {
+      if (!selectedDates.some((date) => isSameDay(noteDate, date))) {
         return false
       }
     }
