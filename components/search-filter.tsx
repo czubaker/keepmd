@@ -14,7 +14,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ActivityCalendar } from "./activity-calendar"
+import { DatePicker } from "./date-picker"
 import { format } from "date-fns"
 
 export function SearchFilter() {
@@ -73,7 +73,7 @@ export function SearchFilter() {
           )}
         </div>
 
-        <ActivityCalendar />
+        <DatePicker />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

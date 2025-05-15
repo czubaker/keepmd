@@ -12,8 +12,8 @@ interface NotesState {
   searchQuery: string
   selectedTags: string[]
   showArchived: boolean
-  subscription: RealtimeChannel | null
   dateFilter: Date | undefined
+  subscription: RealtimeChannel | null
 
   // Fetch operations
   fetchNotes: (userId: string) => Promise<void>
@@ -48,8 +48,8 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   searchQuery: "",
   selectedTags: [],
   showArchived: false,
-  subscription: null,
   dateFilter: undefined,
+  subscription: null,
 
   setupRealtimeSubscription: (userId: string) => {
     // Clean up existing subscription if any
