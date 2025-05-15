@@ -55,13 +55,6 @@
     "appearance": "Appearance",
     "language": "Language",
     "selectLanguage": "Select language",
-    "designSystem": "Design System",
-    "selectDesign": "Select design",
-    "designSystems": {
-      "default": "Default",
-      "ios": "iOS Style",
-      "material": "Material Design 3"
-    },
     "downloadNotes": "Download Notes",
     "downloadAllNotes": "Download All Notes",
     "downloadNotesByTags": "Download Notes by Tags",
