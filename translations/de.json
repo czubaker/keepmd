@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "Ein Google Keep-Klon mit Markdown-Unterstützung"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "logout": "Abmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "createAccount": "Neues Konto erstellen",
+    "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+    "dontHaveAccount": "Haben Sie kein Konto?",
+    "signedInAs": "Angemeldet als"
+  },
+  "notes": {
+    "takeNote": "Notiz erstellen...",
+    "addNote": "Hinzufügen",
+    "pinned": "Angepinnt",
+    "others": "Andere",
+    "noNotes": "Noch keine Notizen. Erstellen Sie Ihre erste Notiz oben!",
+    "noArchivedNotes": "Keine archivierten Notizen gefunden.",
+    "noMatchingNotes": "Keine Notizen entsprechen Ihren aktuellen Filtern.",
+    "searchNotes": "Notizen durchsuchen...",
+    "markdownSupported": "Markdown wird unterstützt.",
+    "preview": "Vorschau",
+    "hidePreview": "Vorschau ausblenden",
+    "manageTags": "Tags verwalten",
+    "addNewTag": "Neuen Tag hinzufügen",
+    "availableTags": "Verfügbare Tags",
+    "noTagsAvailable": "Keine Tags verfügbar",
+    "filterByTags": "Nach Tags filtern",
+    "showArchivedNotes": "Archivierte Notizen anzeigen",
+    "showingArchivedNotes": "Archivierte Notizen werden angezeigt",
+    "clearFilters": "Filter löschen",
+    "date": "Datum"
+  },
+  "actions": {
+    "add": "Hinzufügen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "done": "Fertig",
+    "download": "Herunterladen",
+    "closeWithoutSaving": "Ohne Speichern schließen"
+  },
+  "settings": {
+    "settings": "Einstellungen",
+    "account": "Konto",
+    "appearance": "Erscheinungsbild",
+    "language": "Sprache",
+    "downloadNotes": "Notizen herunterladen",
+    "downloadAllNotes": "Alle Notizen herunterladen",
+    "downloadNotesByTags": "Notizen nach Tags herunterladen",
+    "anySelectedTag": "Beliebiger ausgewählter Tag",
+    "allSelectedTags": "Alle ausgewählten Tags",
+    "downloadSelected": "Ausgewählte herunterladen",
+    "languages": {
+      "en": "Englisch",
+      "de": "Deutsch",
+      "fr": "Französisch",
+      "cs": "Tschechisch",
+      "pl": "Polnisch",
+      "be": "Belarussisch",
+      "uk": "Ukrainisch",
+      "kk": "Kasachisch"
+    }
+  }
+}

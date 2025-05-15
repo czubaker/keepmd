@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "Klon Google Keep s podporou markdown"
+  },
+  "auth": {
+    "login": "Přihlášení",
+    "signup": "Registrace",
+    "logout": "Odhlásit se",
+    "email": "Email",
+    "password": "Heslo",
+    "createAccount": "Vytvořit nový účet",
+    "alreadyHaveAccount": "Již máte účet?",
+    "dontHaveAccount": "Nemáte účet?",
+    "signedInAs": "Přihlášen jako"
+  },
+  "notes": {
+    "takeNote": "Napsat poznámku...",
+    "addNote": "Přidat",
+    "pinned": "Připnuté",
+    "others": "Ostatní",
+    "noNotes": "Zatím žádné poznámky. Vytvořte svou první poznámku výše!",
+    "noArchivedNotes": "Nenalezeny žádné archivované poznámky.",
+    "noMatchingNotes": "Žádné poznámky neodpovídají vašim aktuálním filtrům.",
+    "searchNotes": "Hledat poznámky...",
+    "markdownSupported": "Markdown je podporován.",
+    "preview": "Náhled",
+    "hidePreview": "Skrýt náhled",
+    "manageTags": "Spravovat štítky",
+    "addNewTag": "Přidat nový štítek",
+    "availableTags": "Dostupné štítky",
+    "noTagsAvailable": "Žádné štítky nejsou k dispozici",
+    "filterByTags": "Filtrovat podle štítků",
+    "showArchivedNotes": "Zobrazit archivované poznámky",
+    "showingArchivedNotes": "Zobrazují se archivované poznámky",
+    "clearFilters": "Vymazat filtry",
+    "date": "Datum"
+  },
+  "actions": {
+    "add": "Přidat",
+    "edit": "Upravit",
+    "delete": "Smazat",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "done": "Hotovo",
+    "download": "Stáhnout",
+    "closeWithoutSaving": "Zavřít bez uložení"
+  },
+  "settings": {
+    "settings": "Nastavení",
+    "account": "Účet",
+    "appearance": "Vzhled",
+    "language": "Jazyk",
+    "downloadNotes": "Stáhnout poznámky",
+    "downloadAllNotes": "Stáhnout všechny poznámky",
+    "downloadNotesByTags": "Stáhnout poznámky podle štítků",
+    "anySelectedTag": "Jakýkoliv vybraný štítek",
+    "allSelectedTags": "Všechny vybrané štítky",
+    "downloadSelected": "Stáhnout vybrané",
+    "languages": {
+      "en": "Angličtina",
+      "de": "Němčina",
+      "fr": "Francouzština",
+      "cs": "Čeština",
+      "pl": "Polština",
+      "be": "Běloruština",
+      "uk": "Ukrajinština",
+      "kk": "Kazaština"
+    }
+  }
+}

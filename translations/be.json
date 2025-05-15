@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "Клон Google Keep з падтрымкай markdown"
+  },
+  "auth": {
+    "login": "Уваход",
+    "signup": "Рэгістрацыя",
+    "logout": "Выйсці",
+    "email": "Электронная пошта",
+    "password": "Пароль",
+    "createAccount": "Стварыць новы акаўнт",
+    "alreadyHaveAccount": "Ужо ёсць акаўнт?",
+    "dontHaveAccount": "Няма акаўнта?",
+    "signedInAs": "Увайшлі як"
+  },
+  "notes": {
+    "takeNote": "Зрабіць нататку...",
+    "addNote": "Дадаць",
+    "pinned": "Замацаваныя",
+    "others": "Іншыя",
+    "noNotes": "Пакуль няма нататак. Стварыце сваю першую нататку вышэй!",
+    "noArchivedNotes": "Архіўных нататак не знойдзена.",
+    "noMatchingNotes": "Няма нататак, якія адпавядаюць вашым бягучым фільтрам.",
+    "searchNotes": "Пошук нататак...",
+    "markdownSupported": "Падтрымліваецца Markdown.",
+    "preview": "Папярэдні прагляд",
+    "hidePreview": "Схаваць папярэдні прагляд",
+    "manageTags": "Кіраваць тэгамі",
+    "addNewTag": "Дадаць новы тэг",
+    "availableTags": "Даступныя тэгі",
+    "noTagsAvailable": "Няма даступных тэгаў",
+    "filterByTags": "Фільтраваць па тэгах",
+    "showArchivedNotes": "Паказаць архіўныя нататкі",
+    "showingArchivedNotes": "Паказваюцца архіўныя нататкі",
+    "clearFilters": "Ачысціць фільтры",
+    "date": "Дата"
+  },
+  "actions": {
+    "add": "Дадаць",
+    "edit": "Рэдагаваць",
+    "delete": "Выдаліць",
+    "save": "Захаваць",
+    "cancel": "Адмяніць",
+    "close": "Закрыць",
+    "done": "Гатова",
+    "download": "Спампаваць",
+    "closeWithoutSaving": "Закрыць без захавання"
+  },
+  "settings": {
+    "settings": "Налады",
+    "account": "Акаўнт",
+    "appearance": "Знешні выгляд",
+    "language": "Мова",
+    "downloadNotes": "Спампаваць нататкі",
+    "downloadAllNotes": "Спампаваць усе нататкі",
+    "downloadNotesByTags": "Спампаваць нататкі па тэгах",
+    "anySelectedTag": "Любы выбраны тэг",
+    "allSelectedTags": "Усе выбраныя тэгі",
+    "downloadSelected": "Спампаваць выбраныя",
+    "languages": {
+      "en": "Англійская",
+      "de": "Нямецкая",
+      "fr": "Французская",
+      "cs": "Чэшская",
+      "pl": "Польская",
+      "be": "Беларуская",
+      "uk": "Украінская",
+      "kk": "Казахская"
+    }
+  }
+}

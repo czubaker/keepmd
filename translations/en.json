@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "A Google Keep clone with markdown support"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "createAccount": "Create a new account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "signedInAs": "Signed in as"
+  },
+  "notes": {
+    "takeNote": "Take a note...",
+    "addNote": "Add",
+    "pinned": "Pinned",
+    "others": "Others",
+    "noNotes": "No notes yet. Create your first note above!",
+    "noArchivedNotes": "No archived notes found.",
+    "noMatchingNotes": "No notes match your current filters.",
+    "searchNotes": "Search notes...",
+    "markdownSupported": "Markdown is supported.",
+    "preview": "Preview",
+    "hidePreview": "Hide Preview",
+    "manageTags": "Manage Tags",
+    "addNewTag": "Add new tag",
+    "availableTags": "Available Tags",
+    "noTagsAvailable": "No tags available",
+    "filterByTags": "Filter by Tags",
+    "showArchivedNotes": "Show archived notes",
+    "showingArchivedNotes": "Showing archived notes",
+    "clearFilters": "Clear filters",
+    "date": "Date"
+  },
+  "actions": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "done": "Done",
+    "download": "Download",
+    "closeWithoutSaving": "Close without saving"
+  },
+  "settings": {
+    "settings": "Settings",
+    "account": "Account",
+    "appearance": "Appearance",
+    "language": "Language",
+    "downloadNotes": "Download Notes",
+    "downloadAllNotes": "Download All Notes",
+    "downloadNotesByTags": "Download Notes by Tags",
+    "anySelectedTag": "Any selected tag",
+    "allSelectedTags": "All selected tags",
+    "downloadSelected": "Download Selected",
+    "languages": {
+      "en": "English",
+      "de": "German",
+      "fr": "French",
+      "cs": "Czech",
+      "pl": "Polish",
+      "be": "Belarusian",
+      "uk": "Ukrainian",
+      "kk": "Kazakh"
+    }
+  }
+}

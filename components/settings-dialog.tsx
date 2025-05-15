@@ -12,6 +12,9 @@ import { LogOut } from "lucide-react"
 import { useRouter } from "next/navigation"
 import JSZip from "jszip"
 import type { Note, Tag } from "@/lib/types"
+import { useLanguage, type LanguageCode } from "./language-context"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface SettingsDialogProps {
   open: boolean
@@ -22,6 +25,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { notes, tags } = useNotesStore()
   const { user, signOut } = useAuth()
   const router = useRouter()
+  const { language, setLanguage, t } = useLanguage()
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [tagFilterMode, setTagFilterMode] = useState<"all" | "any">("any")
 
@@ -151,83 +155,129 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     downloadNotes(filteredNotes)
   }
 
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value as LanguageCode)
+  }
+
+  const languages = [
+    { code: "en", name: t("settings.languages.en") },
+    { code: "de", name: t("settings.languages.de") },
+    { code: "fr", name: t("settings.languages.fr") },
+    { code: "cs", name: t("settings.languages.cs") },
+    { code: "pl", name: t("settings.languages.pl") },
+    { code: "be", name: t("settings.languages.be") },
+    { code: "uk", name: t("settings.languages.uk") },
+    { code: "kk", name: t("settings.languages.kk") },
+  ]
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>{t("settings.settings")}</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
-          {/* Account Section */}
-          <div>
-            <h3 className="text-lg font-medium">Account</h3>
-            <div className="mt-2 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Signed in as</p>
-                <p className="font-medium">{user?.email}</p>
-              </div>
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </Button>
-            </div>
-          </div>
+        <Tabs defaultValue="account" className="w-full">
+          <TabsList className="grid grid-cols-3 mb-4">
+            <TabsTrigger value="account">{t("settings.account")}</TabsTrigger>
+            <TabsTrigger value="language">{t("settings.language")}</TabsTrigger>
+            <TabsTrigger value="download">{t("settings.downloadNotes")}</TabsTrigger>
+          </TabsList>
 
-          {/* Download Section */}
-          <div>
-            <h3 className="text-lg font-medium">Download Notes</h3>
-            <div className="mt-2 space-y-4">
-              <Button variant="outline" onClick={handleDownloadAll} className="w-full">
-                Download All Notes
-              </Button>
-
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium">Download Notes by Tags</h4>
-
-                <RadioGroup
-                  value={tagFilterMode}
-                  onValueChange={(value) => setTagFilterMode(value as "all" | "any")}
-                  className="flex items-center space-x-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="any" id="any" />
-                    <Label htmlFor="any">Any selected tag</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="all" id="all" />
-                    <Label htmlFor="all">All selected tags</Label>
-                  </div>
-                </RadioGroup>
-
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {tags.map((tag: Tag) => (
-                    <Badge
-                      key={tag.id}
-                      variant={selectedTags.includes(tag.id) ? "default" : "outline"}
-                      className="cursor-pointer"
-                      onClick={() => handleTagToggle(tag.id)}
-                    >
-                      {tag.name}
-                    </Badge>
-                  ))}
+          <TabsContent value="account" className="space-y-4">
+            <div>
+              <h3 className="text-lg font-medium">{t("settings.account")}</h3>
+              <div className="mt-2 flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">{t("auth.signedInAs")}</p>
+                  <p className="font-medium">{user?.email}</p>
                 </div>
-
-                <Button
-                  variant="outline"
-                  onClick={handleDownloadSelected}
-                  disabled={selectedTags.length === 0}
-                  className="w-full mt-2"
-                >
-                  Download Selected
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  {t("auth.logout")}
                 </Button>
               </div>
             </div>
-          </div>
-        </div>
+          </TabsContent>
+
+          <TabsContent value="language" className="space-y-4">
+            <div>
+              <h3 className="text-lg font-medium">{t("settings.language")}</h3>
+              <div className="mt-2">
+                <Label htmlFor="language-select" className="mb-2 block">
+                  {t("settings.language")}
+                </Label>
+                <Select value={language} onValueChange={handleLanguageChange}>
+                  <SelectTrigger id="language-select">
+                    <SelectValue placeholder={t("settings.language")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        {lang.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="download" className="space-y-4">
+            <div>
+              <h3 className="text-lg font-medium">{t("settings.downloadNotes")}</h3>
+              <div className="mt-2 space-y-4">
+                <Button variant="outline" onClick={handleDownloadAll} className="w-full">
+                  {t("settings.downloadAllNotes")}
+                </Button>
+
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">{t("settings.downloadNotesByTags")}</h4>
+
+                  <RadioGroup
+                    value={tagFilterMode}
+                    onValueChange={(value) => setTagFilterMode(value as "all" | "any")}
+                    className="flex items-center space-x-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="any" id="any" />
+                      <Label htmlFor="any">{t("settings.anySelectedTag")}</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="all" id="all" />
+                      <Label htmlFor="all">{t("settings.allSelectedTags")}</Label>
+                    </div>
+                  </RadioGroup>
+
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {tags.map((tag: Tag) => (
+                      <Badge
+                        key={tag.id}
+                        variant={selectedTags.includes(tag.id) ? "default" : "outline"}
+                        className="cursor-pointer"
+                        onClick={() => handleTagToggle(tag.id)}
+                      >
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    onClick={handleDownloadSelected}
+                    disabled={selectedTags.length === 0}
+                    className="w-full mt-2"
+                  >
+                    {t("settings.downloadSelected")}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
 
         <DialogFooter>
-          <Button onClick={() => onOpenChange(false)}>Close</Button>
+          <Button onClick={() => onOpenChange(false)}>{t("actions.close")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

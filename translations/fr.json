@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "Un clone de Google Keep avec support markdown"
+  },
+  "auth": {
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "logout": "Déconnexion",
+    "email": "Email",
+    "password": "Mot de passe",
+    "createAccount": "Créer un nouveau compte",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "signedInAs": "Connecté en tant que"
+  },
+  "notes": {
+    "takeNote": "Prendre une note...",
+    "addNote": "Ajouter",
+    "pinned": "Épinglé",
+    "others": "Autres",
+    "noNotes": "Pas encore de notes. Créez votre première note ci-dessus !",
+    "noArchivedNotes": "Aucune note archivée trouvée.",
+    "noMatchingNotes": "Aucune note ne correspond à vos filtres actuels.",
+    "searchNotes": "Rechercher des notes...",
+    "markdownSupported": "Markdown est pris en charge.",
+    "preview": "Aperçu",
+    "hidePreview": "Masquer l'aperçu",
+    "manageTags": "Gérer les tags",
+    "addNewTag": "Ajouter un nouveau tag",
+    "availableTags": "Tags disponibles",
+    "noTagsAvailable": "Aucun tag disponible",
+    "filterByTags": "Filtrer par tags",
+    "showArchivedNotes": "Afficher les notes archivées",
+    "showingArchivedNotes": "Affichage des notes archivées",
+    "clearFilters": "Effacer les filtres",
+    "date": "Date"
+  },
+  "actions": {
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "done": "Terminé",
+    "download": "Télécharger",
+    "closeWithoutSaving": "Fermer sans enregistrer"
+  },
+  "settings": {
+    "settings": "Paramètres",
+    "account": "Compte",
+    "appearance": "Apparence",
+    "language": "Langue",
+    "downloadNotes": "Télécharger les notes",
+    "downloadAllNotes": "Télécharger toutes les notes",
+    "downloadNotesByTags": "Télécharger les notes par tags",
+    "anySelectedTag": "N'importe quel tag sélectionné",
+    "allSelectedTags": "Tous les tags sélectionnés",
+    "downloadSelected": "Télécharger la sélection",
+    "languages": {
+      "en": "Anglais",
+      "de": "Allemand",
+      "fr": "Français",
+      "cs": "Tchèque",
+      "pl": "Polonais",
+      "be": "Biélorusse",
+      "uk": "Ukrainien",
+      "kk": "Kazakh"
+    }
+  }
+}

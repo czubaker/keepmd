@@ -2,6 +2,7 @@ import type React from "react"
 import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/components/auth/auth-context"
+import { LanguageProvider } from "@/components/language-context"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
@@ -24,8 +25,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            <main className="min-h-screen bg-background text-foreground">{children}</main>
-            <Toaster />
+            <LanguageProvider>
+              <main className="min-h-screen bg-background text-foreground">{children}</main>
+              <Toaster />
+            </LanguageProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

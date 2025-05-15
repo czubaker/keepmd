@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "Klon Google Keep z obsługą markdown"
+  },
+  "auth": {
+    "login": "Logowanie",
+    "signup": "Rejestracja",
+    "logout": "Wyloguj się",
+    "email": "Email",
+    "password": "Hasło",
+    "createAccount": "Utwórz nowe konto",
+    "alreadyHaveAccount": "Masz już konto?",
+    "dontHaveAccount": "Nie masz konta?",
+    "signedInAs": "Zalogowany jako"
+  },
+  "notes": {
+    "takeNote": "Napisz notatkę...",
+    "addNote": "Dodaj",
+    "pinned": "Przypięte",
+    "others": "Inne",
+    "noNotes": "Brak notatek. Utwórz swoją pierwszą notatkę powyżej!",
+    "noArchivedNotes": "Nie znaleziono zarchiwizowanych notatek.",
+    "noMatchingNotes": "Żadne notatki nie pasują do bieżących filtrów.",
+    "searchNotes": "Szukaj notatek...",
+    "markdownSupported": "Obsługiwany jest Markdown.",
+    "preview": "Podgląd",
+    "hidePreview": "Ukryj podgląd",
+    "manageTags": "Zarządzaj tagami",
+    "addNewTag": "Dodaj nowy tag",
+    "availableTags": "Dostępne tagi",
+    "noTagsAvailable": "Brak dostępnych tagów",
+    "filterByTags": "Filtruj według tagów",
+    "showArchivedNotes": "Pokaż zarchiwizowane notatki",
+    "showingArchivedNotes": "Wyświetlanie zarchiwizowanych notatek",
+    "clearFilters": "Wyczyść filtry",
+    "date": "Data"
+  },
+  "actions": {
+    "add": "Dodaj",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "done": "Gotowe",
+    "download": "Pobierz",
+    "closeWithoutSaving": "Zamknij bez zapisywania"
+  },
+  "settings": {
+    "settings": "Ustawienia",
+    "account": "Konto",
+    "appearance": "Wygląd",
+    "language": "Język",
+    "downloadNotes": "Pobierz notatki",
+    "downloadAllNotes": "Pobierz wszystkie notatki",
+    "downloadNotesByTags": "Pobierz notatki według tagów",
+    "anySelectedTag": "Dowolny wybrany tag",
+    "allSelectedTags": "Wszystkie wybrane tagi",
+    "downloadSelected": "Pobierz wybrane",
+    "languages": {
+      "en": "Angielski",
+      "de": "Niemiecki",
+      "fr": "Francuski",
+      "cs": "Czeski",
+      "pl": "Polski",
+      "be": "Białoruski",
+      "uk": "Ukraiński",
+      "kk": "Kazachski"
+    }
+  }
+}

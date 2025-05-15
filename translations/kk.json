@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "Markdown қолдауы бар Google Keep клоны"
+  },
+  "auth": {
+    "login": "Кіру",
+    "signup": "Тіркелу",
+    "logout": "Шығу",
+    "email": "Электрондық пошта",
+    "password": "Құпия сөз",
+    "createAccount": "Жаңа тіркелгі жасау",
+    "alreadyHaveAccount": "Тіркелгіңіз бар ма?",
+    "dontHaveAccount": "Тіркелгіңіз жоқ па?",
+    "signedInAs": "Кірген пайдаланушы"
+  },
+  "notes": {
+    "takeNote": "Жазба жасау...",
+    "addNote": "Қосу",
+    "pinned": "Бекітілген",
+    "others": "Басқалар",
+    "noNotes": "Әзірге жазбалар жоқ. Жоғарыда алғашқы жазбаңызды жасаңыз!",
+    "noArchivedNotes": "Мұрағатталған жазбалар табылмады.",
+    "noMatchingNotes": "Ағымдағы сүзгілерге сәйкес келетін жазбалар жоқ.",
+    "searchNotes": "Жазбаларды іздеу...",
+    "markdownSupported": "Markdown қолдау көрсетіледі.",
+    "preview": "Алдын ала қарау",
+    "hidePreview": "Алдын ала қарауды жасыру",
+    "manageTags": "Тегтерді басқару",
+    "addNewTag": "Жаңа тег қосу",
+    "availableTags": "Қолжетімді тегтер",
+    "noTagsAvailable": "Қолжетімді тегтер жоқ",
+    "filterByTags": "Тегтер бойынша сүзу",
+    "showArchivedNotes": "Мұрағатталған жазбаларды көрсету",
+    "showingArchivedNotes": "Мұрағатталған жазбалар көрсетілуде",
+    "clearFilters": "Сүзгілерді тазалау",
+    "date": "Күні"
+  },
+  "actions": {
+    "add": "Қосу",
+    "edit": "Өңдеу",
+    "delete": "Жою",
+    "save": "Сақтау",
+    "cancel": "Болдырмау",
+    "close": "Жабу",
+    "done": "Дайын",
+    "download": "Жүктеу",
+    "closeWithoutSaving": "Сақтамай жабу"
+  },
+  "settings": {
+    "settings": "Параметрлер",
+    "account": "Тіркелгі",
+    "appearance": "Сыртқы түрі",
+    "language": "Тіл",
+    "downloadNotes": "Жазбаларды жүктеу",
+    "downloadAllNotes": "Барлық жазбаларды жүктеу",
+    "downloadNotesByTags": "Жазбаларды тегтер бойынша жүктеу",
+    "anySelectedTag": "Кез келген таңдалған тег",
+    "allSelectedTags": "Барлық таңдалған тегтер",
+    "downloadSelected": "Таңдалғандарды жүктеу",
+    "languages": {
+      "en": "Ағылшын",
+      "de": "Неміс",
+      "fr": "Француз",
+      "cs": "Чех",
+      "pl": "Поляк",
+      "be": "Беларусь",
+      "uk": "Украин",
+      "kk": "Қазақ"
+    }
+  }
+}

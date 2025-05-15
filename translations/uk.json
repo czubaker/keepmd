@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Keepmd",
+    "tagline": "Клон Google Keep з підтримкою markdown"
+  },
+  "auth": {
+    "login": "Вхід",
+    "signup": "Реєстрація",
+    "logout": "Вийти",
+    "email": "Електронна пошта",
+    "password": "Пароль",
+    "createAccount": "Створити новий обліковий запис",
+    "alreadyHaveAccount": "Вже маєте обліковий запис?",
+    "dontHaveAccount": "Немає облікового запису?",
+    "signedInAs": "Увійшли як"
+  },
+  "notes": {
+    "takeNote": "Створити нотатку...",
+    "addNote": "Додати",
+    "pinned": "Закріплені",
+    "others": "Інші",
+    "noNotes": "Поки немає нотаток. Створіть свою першу нотатку вище!",
+    "noArchivedNotes": "Архівних нотаток не знайдено.",
+    "noMatchingNotes": "Немає нотаток, які відповідають вашим поточним фільтрам.",
+    "searchNotes": "Пошук нотаток...",
+    "markdownSupported": "Підтримується Markdown.",
+    "preview": "Попередній перегляд",
+    "hidePreview": "Приховати попередній перегляд",
+    "manageTags": "Керувати тегами",
+    "addNewTag": "Додати новий тег",
+    "availableTags": "Доступні теги",
+    "noTagsAvailable": "Немає доступних тегів",
+    "filterByTags": "Фільтрувати за тегами",
+    "showArchivedNotes": "Показати архівні нотатки",
+    "showingArchivedNotes": "Показуються архівні нотатки",
+    "clearFilters": "Очистити фільтри",
+    "date": "Дата"
+  },
+  "actions": {
+    "add": "Додати",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "close": "Закрити",
+    "done": "Готово",
+    "download": "Завантажити",
+    "closeWithoutSaving": "Закрити без збереження"
+  },
+  "settings": {
+    "settings": "Налаштування",
+    "account": "Обліковий запис",
+    "appearance": "Зовнішній вигляд",
+    "language": "Мова",
+    "downloadNotes": "Завантажити нотатки",
+    "downloadAllNotes": "Завантажити всі нотатки",
+    "downloadNotesByTags": "Завантажити нотатки за тегами",
+    "anySelectedTag": "Будь-який вибраний тег",
+    "allSelectedTags": "Усі вибрані теги",
+    "downloadSelected": "Завантажити вибрані",
+    "languages": {
+      "en": "Англійська",
+      "de": "Німецька",
+      "fr": "Французька",
+      "cs": "Чеська",
+      "pl": "Польська",
+      "be": "Білоруська",
+      "uk": "Українська",
+      "kk": "Казахська"
+    }
+  }
+}
