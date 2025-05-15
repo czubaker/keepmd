@@ -13,10 +13,9 @@ import { useRouter } from "next/navigation"
 import JSZip from "jszip"
 import type { Note, Tag } from "@/lib/types"
 import { useLanguage, type LanguageCode } from "./language-context"
+import { useDesign, type DesignSystem } from "./design-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-// Add the sort order switch to the settings dialog
-// First, import the Switch component
 import { Switch } from "@/components/ui/switch"
 
 interface SettingsDialogProps {
@@ -25,11 +24,11 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
-  // Then, add the sortByModified state to the component
   const { notes, tags, sortByModified, toggleSortOrder } = useNotesStore()
   const { user, signOut } = useAuth()
   const router = useRouter()
   const { language, setLanguage, t } = useLanguage()
+  const { designSystem, setDesignSystem } = useDesign()
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [tagFilterMode, setTagFilterMode] = useState<"all" | "any">("any")
 
@@ -163,6 +162,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     setLanguage(value as LanguageCode)
   }
 
+  const handleDesignChange = (value: string) => {
+    setDesignSystem(value as DesignSystem)
+  }
+
   const languages = [
     { code: "en", name: t("settings.languages.en") },
     { code: "de", name: t("settings.languages.de") },
@@ -174,6 +177,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     { code: "kk", name: t("settings.languages.kk") },
   ]
 
+  const designSystems = [
+    { code: "default", name: t("settings.designSystems.default") },
+    { code: "ios", name: t("settings.designSystems.ios") },
+    { code: "material", name: t("settings.designSystems.material") },
+  ]
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
@@ -182,8 +191,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         </DialogHeader>
 
         <Tabs defaultValue="account" className="w-full">
-          <TabsList className="grid grid-cols-3 mb-4">
+          <TabsList className="grid grid-cols-4 mb-4">
             <TabsTrigger value="account">{t("settings.account")}</TabsTrigger>
+            <TabsTrigger value="appearance">{t("settings.appearance")}</TabsTrigger>
             <TabsTrigger value="language">{t("settings.language")}</TabsTrigger>
             <TabsTrigger value="download">{t("settings.downloadNotes")}</TabsTrigger>
           </TabsList>
@@ -214,6 +224,26 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   onCheckedChange={toggleSortOrder}
                   aria-label={t("settings.sortByModified")}
                 />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="appearance" className="space-y-4">
+            <div>
+              <h3 className="text-lg font-medium">{t("settings.designSystem")}</h3>
+              <div className="mt-2">
+                <Select value={designSystem} onValueChange={handleDesignChange}>
+                  <SelectTrigger id="design-select">
+                    <SelectValue placeholder={t("settings.selectDesign")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {designSystems.map((design) => (
+                      <SelectItem key={design.code} value={design.code}>
+                        {design.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </TabsContent>
