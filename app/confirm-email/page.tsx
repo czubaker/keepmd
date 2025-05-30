@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
-import { supabase } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client" // Fixed import path
 import { useLanguage } from "@/components/language-context"
 import { Loader2 } from "lucide-react"
 
