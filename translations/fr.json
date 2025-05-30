@@ -12,7 +12,44 @@
     "createAccount": "Créer un nouveau compte",
     "alreadyHaveAccount": "Vous avez déjà un compte ?",
     "dontHaveAccount": "Vous n'avez pas de compte ?",
-    "signedInAs": "Connecté en tant que"
+    "signedInAs": "Connecté en tant que",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "resetPasswordDescription": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+    "sendResetLink": "Envoyer le lien de réinitialisation",
+    "sending": "Envoi en cours...",
+    "passwordResetSent": "Réinitialisation du mot de passe envoyée",
+    "passwordResetSentDescription": "Vérifiez votre email pour un lien de réinitialisation du mot de passe.",
+    "checkEmail": "Vérifiez votre email",
+    "passwordResetEmailSent": "Nous vous avons envoyé un lien de réinitialisation du mot de passe. Veuillez vérifier votre email et suivre les instructions.",
+    "rememberPassword": "Vous vous souvenez de votre mot de passe ?",
+    "backToLogin": "Retour à la connexion",
+    "setNewPassword": "Définir un nouveau mot de passe",
+    "setNewPasswordDescription": "Entrez votre nouveau mot de passe ci-dessous.",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "updatePassword": "Mettre à jour le mot de passe",
+    "updating": "Mise à jour...",
+    "passwordUpdated": "Mot de passe mis à jour avec succès !",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+    "invalidSession": "Session invalide",
+    "invalidSessionDescription": "Votre session de réinitialisation du mot de passe a expiré. Veuillez demander une nouvelle réinitialisation du mot de passe.",
+    "confirmingEmail": "Confirmation de l'email...",
+    "emailConfirmed": "Email confirmé !",
+    "emailConfirmedDescription": "Votre email a été confirmé avec succès. Vous pouvez maintenant accéder à votre compte.",
+    "confirmationFailed": "Confirmation échouée",
+    "confirmationFailedDescription": "Nous n'avons pas pu confirmer votre email. Le lien est peut-être invalide ou expiré.",
+    "invalidConfirmationLink": "Lien de confirmation invalide",
+    "confirmEmailSent": "Nous vous avons envoyé un email de confirmation. Veuillez vérifier votre email et cliquer sur le lien de confirmation pour activer votre compte.",
+    "goToApp": "Aller à l'application",
+    "success": "Succès",
+    "error": "Erreur",
+    "unexpectedError": "Une erreur inattendue s'est produite",
+    "signingUp": "Création du compte...",
+    "emailConfirmation": "Confirmation de l'email",
+    "emailConfirmationFailed": "Échec de la confirmation de l'email",
+    "redirectingToApp": "Redirection vers l'application..."
   },
   "notes": {
     "takeNote": "Prendre une note...",
@@ -34,7 +71,9 @@
     "showArchivedNotes": "Afficher les notes archivées",
     "showingArchivedNotes": "Affichage des notes archivées",
     "clearFilters": "Effacer les filtres",
-    "date": "Date"
+    "date": "Date",
+    "created": "Créé",
+    "modified": "Modifié"
   },
   "actions": {
     "add": "Ajouter",
@@ -52,12 +91,15 @@
     "account": "Compte",
     "appearance": "Apparence",
     "language": "Langue",
+    "selectLanguage": "Sélectionner la langue",
     "downloadNotes": "Télécharger les notes",
     "downloadAllNotes": "Télécharger toutes les notes",
     "downloadNotesByTags": "Télécharger les notes par tags",
     "anySelectedTag": "N'importe quel tag sélectionné",
     "allSelectedTags": "Tous les tags sélectionnés",
     "downloadSelected": "Télécharger la sélection",
+    "sortByModified": "Trier par dernière modification",
+    "sortByModifiedDescription": "Lorsque activé, les notes seront triées par date de modification au lieu de la date de création",
     "languages": {
       "en": "Anglais",
       "de": "Allemand",
@@ -68,5 +110,8 @@
       "uk": "Ukrainien",
       "kk": "Kazakh"
     }
+  },
+  "common": {
+    "loading": "Chargement..."
   }
 }

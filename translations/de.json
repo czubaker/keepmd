@@ -12,7 +12,44 @@
     "createAccount": "Neues Konto erstellen",
     "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
     "dontHaveAccount": "Haben Sie kein Konto?",
-    "signedInAs": "Angemeldet als"
+    "signedInAs": "Angemeldet als",
+    "forgotPassword": "Passwort vergessen?",
+    "resetPassword": "Passwort zurücksetzen",
+    "resetPasswordDescription": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "sendResetLink": "Reset-Link senden",
+    "sending": "Wird gesendet...",
+    "passwordResetSent": "Passwort-Reset gesendet",
+    "passwordResetSentDescription": "Überprüfen Sie Ihre E-Mail für einen Passwort-Reset-Link.",
+    "checkEmail": "Überprüfen Sie Ihre E-Mail",
+    "passwordResetEmailSent": "Wir haben Ihnen einen Passwort-Reset-Link gesendet. Bitte überprüfen Sie Ihre E-Mail und folgen Sie den Anweisungen.",
+    "rememberPassword": "Passwort wieder eingefallen?",
+    "backToLogin": "Zurück zur Anmeldung",
+    "setNewPassword": "Neues Passwort festlegen",
+    "setNewPasswordDescription": "Geben Sie Ihr neues Passwort unten ein.",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "updatePassword": "Passwort aktualisieren",
+    "updating": "Wird aktualisiert...",
+    "passwordUpdated": "Passwort erfolgreich aktualisiert!",
+    "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+    "passwordTooShort": "Passwort muss mindestens 6 Zeichen lang sein",
+    "invalidSession": "Ungültige Sitzung",
+    "invalidSessionDescription": "Ihre Passwort-Reset-Sitzung ist abgelaufen. Bitte fordern Sie einen neuen Passwort-Reset an.",
+    "confirmingEmail": "E-Mail wird bestätigt...",
+    "emailConfirmed": "E-Mail bestätigt!",
+    "emailConfirmedDescription": "Ihre E-Mail wurde erfolgreich bestätigt. Sie können jetzt auf Ihr Konto zugreifen.",
+    "confirmationFailed": "Bestätigung fehlgeschlagen",
+    "confirmationFailedDescription": "Wir konnten Ihre E-Mail nicht bestätigen. Der Link ist möglicherweise ungültig oder abgelaufen.",
+    "invalidConfirmationLink": "Ungültiger Bestätigungslink",
+    "confirmEmailSent": "Wir haben Ihnen eine Bestätigungs-E-Mail gesendet. Bitte überprüfen Sie Ihre E-Mail und klicken Sie auf den Bestätigungslink, um Ihr Konto zu aktivieren.",
+    "goToApp": "Zur App gehen",
+    "success": "Erfolg",
+    "error": "Fehler",
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten",
+    "signingUp": "Konto wird erstellt...",
+    "emailConfirmation": "E-Mail-Bestätigung",
+    "emailConfirmationFailed": "E-Mail-Bestätigung fehlgeschlagen",
+    "redirectingToApp": "Weiterleitung zur App..."
   },
   "notes": {
     "takeNote": "Notiz erstellen...",
@@ -34,7 +71,9 @@
     "showArchivedNotes": "Archivierte Notizen anzeigen",
     "showingArchivedNotes": "Archivierte Notizen werden angezeigt",
     "clearFilters": "Filter löschen",
-    "date": "Datum"
+    "date": "Datum",
+    "created": "Erstellt",
+    "modified": "Geändert"
   },
   "actions": {
     "add": "Hinzufügen",
@@ -52,12 +91,15 @@
     "account": "Konto",
     "appearance": "Erscheinungsbild",
     "language": "Sprache",
+    "selectLanguage": "Sprache auswählen",
     "downloadNotes": "Notizen herunterladen",
     "downloadAllNotes": "Alle Notizen herunterladen",
     "downloadNotesByTags": "Notizen nach Tags herunterladen",
     "anySelectedTag": "Beliebiger ausgewählter Tag",
     "allSelectedTags": "Alle ausgewählten Tags",
     "downloadSelected": "Ausgewählte herunterladen",
+    "sortByModified": "Nach letzter Änderung sortieren",
+    "sortByModifiedDescription": "Wenn aktiviert, werden Notizen nach Änderungsdatum statt nach Erstellungsdatum sortiert",
     "languages": {
       "en": "Englisch",
       "de": "Deutsch",
@@ -68,5 +110,8 @@
       "uk": "Ukrainisch",
       "kk": "Kasachisch"
     }
+  },
+  "common": {
+    "loading": "Wird geladen..."
   }
 }

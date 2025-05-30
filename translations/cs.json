@@ -12,7 +12,44 @@
     "createAccount": "Vytvořit nový účet",
     "alreadyHaveAccount": "Již máte účet?",
     "dontHaveAccount": "Nemáte účet?",
-    "signedInAs": "Přihlášen jako"
+    "signedInAs": "Přihlášen jako",
+    "forgotPassword": "Zapomenuté heslo?",
+    "resetPassword": "Obnovit heslo",
+    "resetPasswordDescription": "Zadejte svou emailovou adresu a pošleme vám odkaz pro obnovení hesla.",
+    "sendResetLink": "Odeslat odkaz pro obnovení",
+    "sending": "Odesílání...",
+    "passwordResetSent": "Obnovení hesla odesláno",
+    "passwordResetSentDescription": "Zkontrolujte svůj email pro odkaz na obnovení hesla.",
+    "checkEmail": "Zkontrolujte svůj email",
+    "passwordResetEmailSent": "Poslali jsme vám odkaz pro obnovení hesla. Zkontrolujte prosím svůj email a postupujte podle pokynů.",
+    "rememberPassword": "Vzpomněli jste si na heslo?",
+    "backToLogin": "Zpět k přihlášení",
+    "setNewPassword": "Nastavit nové heslo",
+    "setNewPasswordDescription": "Zadejte své nové heslo níže.",
+    "newPassword": "Nové heslo",
+    "confirmPassword": "Potvrdit heslo",
+    "updatePassword": "Aktualizovat heslo",
+    "updating": "Aktualizace...",
+    "passwordUpdated": "Heslo úspěšně aktualizováno!",
+    "passwordsDoNotMatch": "Hesla se neshodují",
+    "passwordTooShort": "Heslo musí mít alespoň 6 znaků",
+    "invalidSession": "Neplatná relace",
+    "invalidSessionDescription": "Vaše relace pro obnovení hesla vypršela. Požádejte prosím o nové obnovení hesla.",
+    "confirmingEmail": "Potvrzování emailu...",
+    "emailConfirmed": "Email potvrzen!",
+    "emailConfirmedDescription": "Váš email byl úspěšně potvrzen. Nyní můžete přistupovat ke svému účtu.",
+    "confirmationFailed": "Potvrzení selhalo",
+    "confirmationFailedDescription": "Nemohli jsme potvrdit váš email. Odkaz může být neplatný nebo vypršel.",
+    "invalidConfirmationLink": "Neplatný potvrzovací odkaz",
+    "confirmEmailSent": "Poslali jsme vám potvrzovací email. Zkontrolujte prosím svůj email a klikněte na potvrzovací odkaz pro aktivaci účtu.",
+    "goToApp": "Jít do aplikace",
+    "success": "Úspěch",
+    "error": "Chyba",
+    "unexpectedError": "Došlo k neočekávané chybě",
+    "signingUp": "Vytváření účtu...",
+    "emailConfirmation": "Potvrzení emailu",
+    "emailConfirmationFailed": "Potvrzení emailu selhalo",
+    "redirectingToApp": "Přesměrování do aplikace..."
   },
   "notes": {
     "takeNote": "Napsat poznámku...",
@@ -34,7 +71,9 @@
     "showArchivedNotes": "Zobrazit archivované poznámky",
     "showingArchivedNotes": "Zobrazují se archivované poznámky",
     "clearFilters": "Vymazat filtry",
-    "date": "Datum"
+    "date": "Datum",
+    "created": "Vytvořeno",
+    "modified": "Upraveno"
   },
   "actions": {
     "add": "Přidat",
@@ -52,12 +91,15 @@
     "account": "Účet",
     "appearance": "Vzhled",
     "language": "Jazyk",
+    "selectLanguage": "Vybrat jazyk",
     "downloadNotes": "Stáhnout poznámky",
     "downloadAllNotes": "Stáhnout všechny poznámky",
     "downloadNotesByTags": "Stáhnout poznámky podle štítků",
     "anySelectedTag": "Jakýkoliv vybraný štítek",
     "allSelectedTags": "Všechny vybrané štítky",
     "downloadSelected": "Stáhnout vybrané",
+    "sortByModified": "Řadit podle poslední úpravy",
+    "sortByModifiedDescription": "Pokud je povoleno, poznámky budou řazeny podle data úpravy místo data vytvoření",
     "languages": {
       "en": "Angličtina",
       "de": "Němčina",
@@ -68,5 +110,8 @@
       "uk": "Ukrajinština",
       "kk": "Kazaština"
     }
+  },
+  "common": {
+    "loading": "Načítání..."
   }
 }

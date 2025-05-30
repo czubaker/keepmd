@@ -12,7 +12,44 @@
     "createAccount": "Стварыць новы акаўнт",
     "alreadyHaveAccount": "Ужо ёсць акаўнт?",
     "dontHaveAccount": "Няма акаўнта?",
-    "signedInAs": "Увайшлі як"
+    "signedInAs": "Увайшлі як",
+    "forgotPassword": "Забылі пароль?",
+    "resetPassword": "Скінуць пароль",
+    "resetPasswordDescription": "Увядзіце свой адрас электроннай пошты, і мы вышлем вам спасылку для скідання пароля.",
+    "sendResetLink": "Адправіць спасылку для скідання",
+    "sending": "Адпраўка...",
+    "passwordResetSent": "Скід пароля адпраўлены",
+    "passwordResetSentDescription": "Праверце сваю электронную пошту на спасылку для скідання пароля.",
+    "checkEmail": "Праверце сваю электронную пошту",
+    "passwordResetEmailSent": "Мы адправілі вам спасылку для скідання пароля. Калі ласка, праверце сваю электронную пошту і выконвайце інструкцыі.",
+    "rememberPassword": "Успомнілі пароль?",
+    "backToLogin": "Вярнуцца да ўваходу",
+    "setNewPassword": "Усталяваць новы пароль",
+    "setNewPasswordDescription": "Увядзіце свой новы пароль ніжэй.",
+    "newPassword": "Новы пароль",
+    "confirmPassword": "Пацвердзіць пароль",
+    "updatePassword": "Абнавіць пароль",
+    "updating": "Абнаўленне...",
+    "passwordUpdated": "Пароль паспяхова абноўлены!",
+    "passwordsDoNotMatch": "Паролі не супадаюць",
+    "passwordTooShort": "Пароль павінен быць не менш за 6 сімвалаў",
+    "invalidSession": "Няправільная сесія",
+    "invalidSessionDescription": "Ваша сесія скідання пароля скончылася. Калі ласка, запытайце новае скіданне пароля.",
+    "confirmingEmail": "Пацверджанне электроннай пошты...",
+    "emailConfirmed": "Электронная пошта пацверджана!",
+    "emailConfirmedDescription": "Ваша электронная пошта была паспяхова пацверджана. Цяпер вы можаце атрымаць доступ да свайго акаўнта.",
+    "confirmationFailed": "Пацверджанне не атрымалася",
+    "confirmationFailedDescription": "Мы не змаглі пацвердзіць вашу электронную пошту. Спасылка можа быць няправільнай або скончанай.",
+    "invalidConfirmationLink": "Няправільная спасылка пацверджання",
+    "confirmEmailSent": "Мы адправілі вам электронны ліст пацверджання. Калі ласка, праверце сваю электронную пошту і націсніце спасылку пацверджання, каб актываваць акаўнт.",
+    "goToApp": "Перайсці да прыкладання",
+    "success": "Поспех",
+    "error": "Памылка",
+    "unexpectedError": "Адбылася нечаканая памылка",
+    "signingUp": "Стварэнне акаўнта...",
+    "emailConfirmation": "Пацверджанне электроннай пошты",
+    "emailConfirmationFailed": "Пацверджанне электроннай пошты не атрымалася",
+    "redirectingToApp": "Перанакіраванне да прыкладання..."
   },
   "notes": {
     "takeNote": "Зрабіць нататку...",
@@ -34,7 +71,9 @@
     "showArchivedNotes": "Паказаць архіўныя нататкі",
     "showingArchivedNotes": "Паказваюцца архіўныя нататкі",
     "clearFilters": "Ачысціць фільтры",
-    "date": "Дата"
+    "date": "Дата",
+    "created": "Створана",
+    "modified": "Зменена"
   },
   "actions": {
     "add": "Дадаць",
@@ -52,12 +91,15 @@
     "account": "Акаўнт",
     "appearance": "Знешні выгляд",
     "language": "Мова",
+    "selectLanguage": "Выбраць мову",
     "downloadNotes": "Спампаваць нататкі",
     "downloadAllNotes": "Спампаваць усе нататкі",
     "downloadNotesByTags": "Спампаваць нататкі па тэгах",
     "anySelectedTag": "Любы выбраны тэг",
     "allSelectedTags": "Усе выбраныя тэгі",
     "downloadSelected": "Спампаваць выбраныя",
+    "sortByModified": "Сартаваць па апошняй змене",
+    "sortByModifiedDescription": "Калі ўключана, нататкі будуць сартавацца па даце змены замест даты стварэння",
     "languages": {
       "en": "Англійская",
       "de": "Нямецкая",
@@ -68,5 +110,8 @@
       "uk": "Украінская",
       "kk": "Казахская"
     }
+  },
+  "common": {
+    "loading": "Загрузка..."
   }
 }

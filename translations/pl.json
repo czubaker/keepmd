@@ -12,7 +12,44 @@
     "createAccount": "Utwórz nowe konto",
     "alreadyHaveAccount": "Masz już konto?",
     "dontHaveAccount": "Nie masz konta?",
-    "signedInAs": "Zalogowany jako"
+    "signedInAs": "Zalogowany jako",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "resetPassword": "Resetuj hasło",
+    "resetPasswordDescription": "Wprowadź swój adres email, a wyślemy Ci link do resetowania hasła.",
+    "sendResetLink": "Wyślij link resetujący",
+    "sending": "Wysyłanie...",
+    "passwordResetSent": "Reset hasła wysłany",
+    "passwordResetSentDescription": "Sprawdź swój email w poszukiwaniu linku do resetowania hasła.",
+    "checkEmail": "Sprawdź swój email",
+    "passwordResetEmailSent": "Wysłaliśmy Ci link do resetowania hasła. Sprawdź swój email i postępuj zgodnie z instrukcjami.",
+    "rememberPassword": "Pamiętasz hasło?",
+    "backToLogin": "Powrót do logowania",
+    "setNewPassword": "Ustaw nowe hasło",
+    "setNewPasswordDescription": "Wprowadź swoje nowe hasło poniżej.",
+    "newPassword": "Nowe hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "updatePassword": "Zaktualizuj hasło",
+    "updating": "Aktualizowanie...",
+    "passwordUpdated": "Hasło zostało pomyślnie zaktualizowane!",
+    "passwordsDoNotMatch": "Hasła nie pasują do siebie",
+    "passwordTooShort": "Hasło musi mieć co najmniej 6 znaków",
+    "invalidSession": "Nieprawidłowa sesja",
+    "invalidSessionDescription": "Twoja sesja resetowania hasła wygasła. Poproś o nowy reset hasła.",
+    "confirmingEmail": "Potwierdzanie emaila...",
+    "emailConfirmed": "Email potwierdzony!",
+    "emailConfirmedDescription": "Twój email został pomyślnie potwierdzony. Możesz teraz uzyskać dostęp do swojego konta.",
+    "confirmationFailed": "Potwierdzenie nie powiodło się",
+    "confirmationFailedDescription": "Nie mogliśmy potwierdzić Twojego emaila. Link może być nieprawidłowy lub wygasły.",
+    "invalidConfirmationLink": "Nieprawidłowy link potwierdzający",
+    "confirmEmailSent": "Wysłaliśmy Ci email potwierdzający. Sprawdź swój email i kliknij link potwierdzający, aby aktywować konto.",
+    "goToApp": "Przejdź do aplikacji",
+    "success": "Sukces",
+    "error": "Błąd",
+    "unexpectedError": "Wystąpił nieoczekiwany błąd",
+    "signingUp": "Tworzenie konta...",
+    "emailConfirmation": "Potwierdzenie emaila",
+    "emailConfirmationFailed": "Potwierdzenie emaila nie powiodło się",
+    "redirectingToApp": "Przekierowanie do aplikacji..."
   },
   "notes": {
     "takeNote": "Napisz notatkę...",
@@ -34,7 +71,9 @@
     "showArchivedNotes": "Pokaż zarchiwizowane notatki",
     "showingArchivedNotes": "Wyświetlanie zarchiwizowanych notatek",
     "clearFilters": "Wyczyść filtry",
-    "date": "Data"
+    "date": "Data",
+    "created": "Utworzono",
+    "modified": "Zmodyfikowano"
   },
   "actions": {
     "add": "Dodaj",
@@ -52,12 +91,15 @@
     "account": "Konto",
     "appearance": "Wygląd",
     "language": "Język",
+    "selectLanguage": "Wybierz język",
     "downloadNotes": "Pobierz notatki",
     "downloadAllNotes": "Pobierz wszystkie notatki",
     "downloadNotesByTags": "Pobierz notatki według tagów",
     "anySelectedTag": "Dowolny wybrany tag",
     "allSelectedTags": "Wszystkie wybrane tagi",
     "downloadSelected": "Pobierz wybrane",
+    "sortByModified": "Sortuj według ostatniej modyfikacji",
+    "sortByModifiedDescription": "Gdy włączone, notatki będą sortowane według daty modyfikacji zamiast daty utworzenia",
     "languages": {
       "en": "Angielski",
       "de": "Niemiecki",
@@ -68,5 +110,8 @@
       "uk": "Ukraiński",
       "kk": "Kazachski"
     }
+  },
+  "common": {
+    "loading": "Ładowanie..."
   }
 }
