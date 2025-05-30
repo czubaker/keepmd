@@ -2,83 +2,75 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { supabase } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
-import { supabase } from "@/lib/supabase/client" // Fixed import path
+import { CheckCircle, XCircle, Loader2 } from "lucide-react"
+import Link from "next/link"
 import { useLanguage } from "@/components/language-context"
-import { Loader2 } from "lucide-react"
 
 export default function ConfirmEmailPage() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [isConfirmed, setIsConfirmed] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const { toast } = useToast()
-  const { t } = useLanguage()
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
+  const [message, setMessage] = useState("")
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
 
   useEffect(() => {
-    const confirmEmail = async () => {
-      const token_hash = searchParams.get("token_hash")
-      const type = searchParams.get("type")
-
-      if (token_hash && type) {
-        const { error } = await supabase.auth.verifyOtp({
-          token_hash,
-          type: type as any,
-        })
+    const handleEmailConfirmation = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession()
 
         if (error) {
-          setError(error.message)
-          toast({
-            title: t("auth.error"),
-            description: error.message,
-            variant: "destructive",
-          })
-        } else {
-          setIsConfirmed(true)
-          toast({
-            title: t("auth.success"),
-            description: t("auth.emailConfirmed"),
-          })
+          setStatus("error")
+          setMessage("Email confirmation failed")
+          return
         }
-      } else {
-        setError(t("auth.invalidConfirmationLink"))
+
+        if (data.session) {
+          setStatus("success")
+          setMessage("Email confirmed successfully!")
+          // Redirect to home page after 2 seconds
+          setTimeout(() => {
+            router.push("/")
+          }, 2000)
+        } else {
+          setStatus("error")
+          setMessage("Email confirmation failed")
+        }
+      } catch (error) {
+        setStatus("error")
+        setMessage("An error occurred during email confirmation")
       }
-      setIsLoading(false)
     }
 
-    confirmEmail()
-  }, [searchParams, toast, t])
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto flex flex-col items-center justify-center min-h-screen py-12">
-        <Card className="w-full max-w-md">
-          <CardContent className="flex items-center justify-center p-6">
-            <Loader2 className="h-6 w-6 animate-spin mr-2" />
-            {t("auth.confirmingEmail")}
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
+    handleEmailConfirmation()
+  }, [router])
 
   return (
-    <div className="container mx-auto flex flex-col items-center justify-center min-h-screen py-12">
-      <h1 className="text-3xl font-bold mb-8">{t("app.title")}</h1>
+    <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>{isConfirmed ? t("auth.emailConfirmed") : t("auth.confirmationFailed")}</CardTitle>
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-2">
+            {status === "loading" && <Loader2 className="h-5 w-5 animate-spin" />}
+            {status === "success" && <CheckCircle className="h-5 w-5 text-green-500" />}
+            {status === "error" && <XCircle className="h-5 w-5 text-red-500" />}
+            {t("auth.emailConfirmation")}
+          </CardTitle>
           <CardDescription>
-            {isConfirmed ? t("auth.emailConfirmedDescription") : error || t("auth.confirmationFailedDescription")}
+            {status === "loading" && t("auth.confirmingEmail")}
+            {status === "success" && t("auth.emailConfirmed")}
+            {status === "error" && t("auth.emailConfirmationFailed")}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Button onClick={() => router.push(isConfirmed ? "/" : "/login")} className="w-full">
-            {isConfirmed ? t("auth.goToApp") : t("auth.backToLogin")}
-          </Button>
+        <CardContent className="text-center">
+          <p className="mb-4">{message}</p>
+          {status === "success" && <p className="text-sm text-muted-foreground">{t("auth.redirectingToApp")}</p>}
+          {status === "error" && (
+            <Button asChild>
+              <Link href="/login">{t("auth.backToLogin")}</Link>
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>

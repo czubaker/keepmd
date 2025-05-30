@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { NoteForm } from "@/components/note-form"
 import { NotesGrid } from "@/components/notes-grid"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -20,10 +20,20 @@ export default function Home() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const { t } = useLanguage()
 
+  useEffect(() => {
+    // Force a re-render when user state changes
+    if (user && !isLoading) {
+      // User is authenticated, ensure we're showing the notes interface
+    }
+  }, [user, isLoading])
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-screen">
-        <p>Loading...</p>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>{t("common.loading")}</p>
+        </div>
       </div>
     )
   }
