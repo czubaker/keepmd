@@ -3,82 +3,98 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useAuth } from "./auth-context"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
-import { useRouter } from "next/navigation"
-import { useLanguage } from "@/components/language-context"
+import { useTranslation } from "next-i18next"
+import { useRouter } from "next/router"
 
-export function SignupForm() {
+import { useToast } from "@/components/ui/use-toast"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { supabase } from "@/lib/supabase"
+
+export function SignUpForm() {
+  const { t } = useTranslation()
+  const router = useRouter()
+  const { toast } = useToast()
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { signUp } = useAuth()
-  const { toast } = useToast()
-  const router = useRouter()
-  const { t } = useLanguage()
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const signUp = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/confirm-email`,
+      },
+    })
+    if (error) throw error
+  }
+
+  async function onSubmit(event: React.SyntheticEvent) {
+    event.preventDefault()
     setIsLoading(true)
 
     try {
       await signUp(email, password)
+      setIsSubmitted(true)
       toast({
-        title: "Success",
-        description: "Account created successfully. You can now log in.",
+        title: t("auth.signUpSuccess"),
+        description: t("auth.checkEmail"),
       })
-      router.push("/login")
-    } catch (error) {
+    } catch (error: any) {
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
         variant: "destructive",
+        title: t("auth.signUpFailed"),
+        description: error.message,
       })
     } finally {
       setIsLoading(false)
     }
   }
 
+  // After successful signup, show a message instead of redirecting
+  if (isSubmitted) {
+    return (
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>{t("auth.checkEmail")}</CardTitle>
+          <CardDescription>{t("auth.confirmEmailSent")}</CardDescription>
+        </CardHeader>
+      </Card>
+    )
+  }
+
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>{t("auth.signup")}</CardTitle>
-        <CardDescription>{t("auth.createAccount")}</CardDescription>
+        <CardTitle>{t("auth.signUp")}</CardTitle>
+        <CardDescription>{t("auth.enterCredentials")}</CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("auth.email")}</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">{t("auth.password")}</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating account..." : t("auth.signup")}
-          </Button>
-        </CardFooter>
-      </form>
+      <CardContent className="grid gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor="email">{t("auth.email")}</Label>
+          <Input
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="mail@example.com"
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="password">{t("auth.password")}</Label>
+          <Input id="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button disabled={isLoading} onClick={onSubmit}>
+          {isLoading ? t("auth.signingUp") + "..." : t("auth.signUp")}
+        </Button>
+      </CardFooter>
     </Card>
   )
 }
